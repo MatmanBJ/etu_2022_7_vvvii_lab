@@ -1,4 +1,3 @@
-#include <list>
 #include <./node.h>
 
 // "error: redefinition of 'Node' '././node.h' included multiple times, additional include site here"
@@ -6,17 +5,6 @@
 // https://stackoverflow.com/questions/14290026/linking-h-files-with-c-with-ifdef-header-guards
 #ifndef TREE_H
 #define TREE_H
-
-using namespace std;
-
-typedef unordered_set<string> Myset;
-typedef list<Node*> List;
-
-struct Containers {
-    Myset unset;
-    List list;
-    List list_caim;
-};
 
 class Tree {
 public:

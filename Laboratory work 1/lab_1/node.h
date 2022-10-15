@@ -4,9 +4,13 @@
 // As a consequence, all code is compiled twice and the symbols are duplicated.
 
 #include <iostream>
+#include <unordered_set>
+#include <list>
 
 #ifndef NODE_H
 #define NODE_H
+
+using namespace std;
 
 struct Node {
     Node(int hig);
@@ -17,6 +21,15 @@ struct Node {
     struct Node* mid_right;
     struct Node* right;
     struct Node* parent;
+};
+
+typedef unordered_set<string> Myset;
+typedef list<Node*> List;
+
+struct Containers {
+    Myset unset;
+    List list;
+    List list_caim;
 };
 
 #endif

@@ -1,5 +1,4 @@
 #include <iostream>
-#include <unordered_set>
 #include "./node.h"
 #include "./tree.h"
 
@@ -29,12 +28,15 @@ Tree::Tree() // tree default constructor with given numbers
     end = enda;
 }
 
-Tree::~Tree() {
+Tree::~Tree() // tree default destructor
+{
     DestroyNode(root);
 }
 
-void Tree::DestroyNode(Node* node) {
-    if (node) {
+void Tree::DestroyNode(Node* node) // tree destroyng node method
+{
+    if (node)
+    {
         DestroyNode(node->left);
         DestroyNode(node->mid_left);
         DestroyNode(node->mid_right);
@@ -43,7 +45,8 @@ void Tree::DestroyNode(Node* node) {
     }
 }
 
-Node* Tree::contPreOrder(int* data) {
+Node* Tree::contPreOrder(int* data) // in-depth method
+{
     Node* cur;
     cout << "Начальное состояние:" << endl;
     printArr(root);
@@ -123,7 +126,8 @@ Node* Tree::contPreOrder(int* data) {
     return nullptr;
 }
 
-Node* Tree::contPreOrderRestriction(int restriction, int* data) {
+Node* Tree::contPreOrderRestriction(int restriction, int* data) // in-depth method w/ restriction
+{
     Node* cur;
     cout << "Начальное состояние:" << endl;
     printArr(root);
@@ -203,7 +207,8 @@ Node* Tree::contPreOrderRestriction(int restriction, int* data) {
     return nullptr;
 }
 
-Node* Tree::contPreOrderBySteps(int* data) {
+Node* Tree::contPreOrderBySteps(int* data) // in-depth method by steps
+{
     Node* cur;
     cout << "Начальное состояние:" << endl;
     printArr(root);
@@ -299,7 +304,8 @@ Node* Tree::contPreOrderBySteps(int* data) {
     return nullptr;
 }
 
-Node* Tree::contPreOrderRestrictionBySteps(int restriction, int* data) {
+Node* Tree::contPreOrderRestrictionBySteps(int restriction, int* data) // in-depth method w/ restriction by steps
+{
     Node* cur;
     cout << "Начальное состояние:" << endl;
     printArr(root);
@@ -454,7 +460,8 @@ void Tree::printArr(Node* cur) {
     cout << endl;
 }
 
-string Tree::getString(Node* cur) {
+string Tree::getString(Node* cur)
+{
     string str;
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
@@ -464,7 +471,8 @@ string Tree::getString(Node* cur) {
     return str;
 }
 
-void Tree::unlock(Node* cur, int* data) {
+void Tree::unlock(Node* cur, int* data)
+{
     int x, y;
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
@@ -505,7 +513,8 @@ void Tree::unlock(Node* cur, int* data) {
     }
 }
 
-Node* Tree::fillArr(Node* cur) {
+Node* Tree::fillArr(Node* cur)
+{
     Node* NewNode = new Node(cur->height + 1);
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
