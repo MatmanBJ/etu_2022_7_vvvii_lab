@@ -13,7 +13,6 @@ int main()
     setlocale(LC_ALL, "Russian");
 
     Graph* graph = nullptr; // https://stackoverflow.com/questions/18940175/cannot-delete-stdvector-stdarray
-    Graph tre;
     Node* result = new Node(0);
     Node* cur = new Node(0);
     int choose = 0;
