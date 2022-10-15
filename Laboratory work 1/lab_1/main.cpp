@@ -4,7 +4,7 @@
 #include <string>
 #include <list>
 #include "./node.h"
-#include "./tree.h"
+#include "./graph.h"
 
 using namespace std;
 
@@ -12,8 +12,8 @@ int main()
 {
     setlocale(LC_ALL, "Russian");
 
-    Tree* graph = nullptr; // https://stackoverflow.com/questions/18940175/cannot-delete-stdvector-stdarray
-    Tree tre;
+    Graph* graph = nullptr; // https://stackoverflow.com/questions/18940175/cannot-delete-stdvector-stdarray
+    Graph tre;
     Node* result = new Node(0);
     Node* cur = new Node(0);
     int choose = 0;
@@ -21,7 +21,7 @@ int main()
     int* data = new int[2];
     data[0] = 0;
     data[1] = 0;
-    cout << "Выберите пункт:" << endl;
+    cout << "Please, choose the target:\n";
     cout << "0 -- Exit\n";
     cout << "1 -- Depth-first search (DFS)\n";
     cout << "2 -- Iterative deepening depth-first search (IDDFS)\n";
@@ -30,7 +30,7 @@ int main()
     cout << "Other -- Default -- Depth-first search (DFS)\n";
     cin >> choose;
 
-    graph = new Tree();
+    graph = new Graph();
 
     switch (choose) // https://stackoverflow.com/questions/34829955/what-is-causing-this-cannot-jump-from-switch-statement-to-this-case-label
     {
@@ -41,20 +41,20 @@ int main()
     case 1: // DFS
     {
         result = graph->contPreOrder(data);
+        cout << "Количество созданных вершин: " << data[0] << endl;
+        cout << "Количество шагов: " << data[1] << endl;
         break;
     }
     case 2: // idDFS
     {
-        cout << "Введите ограничение:" << endl;
-        cin >> restriction;
         int local_number = 0;
         // NEED TO DELETE PREVIOUS RESULT ALLOCATION
         result = nullptr;
-        while (result == nullptr && local_number <= restriction)
+        while (result == nullptr)
         {
             delete graph;
-            graph = new Tree();
-            cout << local_number << endl;
+            graph = new Graph();
+            cout << "\n\nDepth: " << local_number << "\n";
             result = graph->contPreOrderRestriction(local_number, data);
             local_number = local_number + 1;
             cout << "Количество созданных вершин: " << data[0] << endl;
@@ -67,16 +67,22 @@ int main()
     case 3: // DFS steps
     {
         result = graph->contPreOrderBySteps(data);
+        cout << "Количество созданных вершин: " << data[0] << endl;
+        cout << "Количество шагов: " << data[1] << endl;
         break;
     }
     case 4: // idDFS steps
     {
         // need to add
+        cout << "Количество созданных вершин: " << data[0] << endl;
+        cout << "Количество шагов: " << data[1] << endl;
         break;
     }
     default: // default DFS
     {
         result = graph->contPreOrder(data);
+        cout << "Количество созданных вершин: " << data[0] << endl;
+        cout << "Количество шагов: " << data[1] << endl;
         break;
     }
     }
@@ -97,9 +103,7 @@ int main()
 
     // ---------- FOUND PATH OUTPUT / NO FOUND PATH MESSAGE ----------
 
-    cout << "Количество созданных вершин: " << data[0] << endl;
-    cout << "Количество шагов: " << data[1] << endl;
-    if (result != nullptr)
+    if (result != nullptr) // if result is not nullptr, print
     {
         cout << "Итоговый путь:" << endl;
         cur = result;

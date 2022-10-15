@@ -3,14 +3,14 @@
 // "error: redefinition of 'Node' '././node.h' included multiple times, additional include site here"
 // https://stackoverflow.com/questions/3246803/why-use-ifndef-class-h-and-define-class-h-in-h-file-but-not-in-cpp
 // https://stackoverflow.com/questions/14290026/linking-h-files-with-c-with-ifdef-header-guards
-#ifndef TREE_H
-#define TREE_H
+#ifndef GRAPH_H
+#define GRAPH_H
 
-class Tree
+class Graph
 {
 public:
-    Tree();
-    ~Tree();
+    Graph();
+    ~Graph();
     Node* contPreOrder(int*);
     Node* contPreOrderRestriction(int, int*);
     Node* iterativeDeepingDFS(int restriction, int* data);

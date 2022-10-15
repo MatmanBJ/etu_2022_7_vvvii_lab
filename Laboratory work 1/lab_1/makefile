@@ -1,2 +1,2 @@
-main: main.cpp node.cpp tree.cpp
-	 g++ -o main main.cpp node.cpp tree.cpp -I.
+main: main.cpp node.cpp graph.cpp
+	 g++ -o main main.cpp node.cpp graph.cpp -I.

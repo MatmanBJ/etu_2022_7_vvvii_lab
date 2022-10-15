@@ -1,8 +1,8 @@
 #include <iostream>
 #include "./node.h"
-#include "./tree.h"
+#include "./graph.h"
 
-Tree::Tree() // tree default constructor with given numbers
+Graph::Graph() // Graph default constructor with given numbers
 {
     Node* start = new Node(0);
     Node* enda = new Node(0);
@@ -28,12 +28,12 @@ Tree::Tree() // tree default constructor with given numbers
     end = enda;
 }
 
-Tree::~Tree() // tree default destructor
+Graph::~Graph() // Graph default destructor
 {
     DestroyNode(root);
 }
 
-void Tree::DestroyNode(Node* node) // tree destroyng node method
+void Graph::DestroyNode(Node* node) // Graph destroyng node method
 {
     if (node)
     {
@@ -45,7 +45,9 @@ void Tree::DestroyNode(Node* node) // tree destroyng node method
     }
 }
 
-Node* Tree::contPreOrder(int* data) // in-depth method
+// ---------- DFS DEPTH ----------
+
+Node* Graph::contPreOrder(int* data) // in-depth method
 {
     Node* cur;
     cout << "Начальное состояние:" << endl;
@@ -126,7 +128,9 @@ Node* Tree::contPreOrder(int* data) // in-depth method
     return nullptr;
 }
 
-Node* Tree::contPreOrderRestriction(int restriction, int* data) // in-depth method w/ restriction
+// ---------- DFS DEPTH LIMIT ----------
+
+Node* Graph::contPreOrderRestriction(int restriction, int* data) // in-depth method w/ restriction
 {
     Node* cur;
     cout << "Начальное состояние:" << endl;
@@ -223,35 +227,9 @@ Node* Tree::contPreOrderRestriction(int restriction, int* data) // in-depth meth
     return nullptr;
 }
 
-/*bool IDDFS(Node* node)
-{
-    int lim = 3;
-    bool e_code;
-    while ((e_code=DLS(node,lim)) != true || (e_code=DLS(node,lim)) != ERR)
-    {
-        lim++;
-    }
-    return e_code;
-}*/
+// ---------- DFS DEPTH STEPS ----------
 
-Node* Tree::iterativeDeepingDFS(int restriction, int* data)
-{
-    int local_number = 0;
-    Node* local_result = nullptr;
-    while (local_result == nullptr && local_number <= restriction)
-    {
-        cout << local_number << endl;
-        local_result = contPreOrderRestriction(local_number, data);
-        local_number = local_number + 1;
-        cout << "Количество созданных вершин: " << data[0] << endl;
-        cout << "Количество шагов: " << data[1] << endl;
-        data[0] = 0;
-        data[1] = 0;
-    }
-    return local_result;
-}
-
-Node* Tree::contPreOrderBySteps(int* data) // in-depth method by steps
+Node* Graph::contPreOrderBySteps(int* data) // in-depth method by steps
 {
     Node* cur;
     cout << "Начальное состояние:" << endl;
@@ -349,7 +327,9 @@ Node* Tree::contPreOrderBySteps(int* data) // in-depth method by steps
     return nullptr;
 }
 
-Node* Tree::contPreOrderRestrictionBySteps(int restriction, int* data) // in-depth method w/ restriction by steps
+// ---------- DFS DEPTH LIMIT STEPS ----------
+
+Node* Graph::contPreOrderRestrictionBySteps(int restriction, int* data) // in-depth method w/ restriction by steps
 {
     Node* cur;
     cout << "Начальное состояние:" << endl;
@@ -446,7 +426,7 @@ Node* Tree::contPreOrderRestrictionBySteps(int restriction, int* data) // in-dep
     return nullptr;
 }
 
-bool Tree::repeat(Node* cur) {
+bool Graph::repeat(Node* cur) {
     if (cont.unset.find(getString(cur)) == cont.unset.end()) {
         return true;
     }
@@ -456,7 +436,7 @@ bool Tree::repeat(Node* cur) {
 
 }
 
-bool Tree::compare(Node* cur) {
+bool Graph::compare(Node* cur) {
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
             for (int y = 0; y < 3; y++) {
@@ -473,7 +453,7 @@ bool Tree::compare(Node* cur) {
     return true;
 }
 
-void Tree::printData(Node* cur) {
+void Graph::printData(Node* cur) {
     if (cur->left != nullptr) {
         printArr(cur->left);
     }
@@ -488,7 +468,7 @@ void Tree::printData(Node* cur) {
     }
 }
 
-void Tree::printDataKaim() {
+void Graph::printDataKaim() {
     list <Node*>::iterator iter;
     cout << "Содержание каймы:" << endl;
     for (iter = cont.list.begin(); iter != cont.list.end(); iter++) {
@@ -496,7 +476,7 @@ void Tree::printDataKaim() {
     }
 }
 
-void Tree::printArr(Node* cur) {
+void Graph::printArr(Node* cur) {
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
             cout << cur->arr[i][j] << " ";
@@ -506,7 +486,7 @@ void Tree::printArr(Node* cur) {
     cout << endl;
 }
 
-string Tree::getString(Node* cur)
+string Graph::getString(Node* cur)
 {
     string str;
     for (int i = 0; i < 3; i++) {
@@ -517,7 +497,7 @@ string Tree::getString(Node* cur)
     return str;
 }
 
-void Tree::unlock(Node* cur, int* data)
+void Graph::unlock(Node* cur, int* data)
 {
     int x, y;
     for (int i = 0; i < 3; i++) {
@@ -559,7 +539,7 @@ void Tree::unlock(Node* cur, int* data)
     }
 }
 
-Node* Tree::fillArr(Node* cur)
+Node* Graph::fillArr(Node* cur)
 {
     Node* NewNode = new Node(cur->height + 1);
     for (int i = 0; i < 3; i++) {
