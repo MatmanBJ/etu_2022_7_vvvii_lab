@@ -12,7 +12,8 @@
 
 using namespace std;
 
-struct Node {
+struct Node
+{
     Node(int hig);
     char** arr;
     int height;
@@ -21,6 +22,7 @@ struct Node {
     struct Node* mid_right;
     struct Node* right;
     struct Node* parent;
+    static void thePath(Node*);
 };
 
 typedef unordered_set<string> Myset;

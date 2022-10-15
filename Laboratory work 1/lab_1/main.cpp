@@ -10,28 +10,34 @@ using namespace std;
 
 int main()
 {
-    setlocale(LC_ALL, "Russian");
+    // ---------- BEGIN ----------
 
+    // here we initializing variables, including main graph class & outcome node,
+    // number of nodes created & steps passed.
+    // also we get choosed algorithm option by user
+    int algorithm_option = 0;
+    //int* created_nodes_steps_passed = new int[2];
+    int created_nodes_steps_passed[2];
     Graph* graph = nullptr; // https://stackoverflow.com/questions/18940175/cannot-delete-stdvector-stdarray
-    Node* result = new Node(0);
-    Node* cur = new Node(0);
-    int choose = 0;
-    int restriction = 0;
-    int* data = new int[2];
-    data[0] = 0;
-    data[1] = 0;
-    cout << "Please, choose the target:\n";
-    cout << "0 -- Exit\n";
-    cout << "1 -- Depth-first search (DFS)\n";
-    cout << "2 -- Iterative deepening depth-first search (IDDFS)\n";
-    cout << "3 -- Depth-first search (DFS) STEPS\n";
-    cout << "4 -- Iterative deepening depth-first search (IDDFS) STEPS\n";
-    cout << "Other -- Default -- Depth-first search (DFS)\n";
-    cin >> choose;
+    Node* outcome = nullptr;
 
+    cout << "Please, choose the target:\n"
+    << "0 -- Exit\n"
+    << "1 -- Depth-first search (DFS)\n"
+    << "2 -- Iterative deepening depth-first search (IDDFS)\n"
+    << "3 -- Depth-first search (DFS) STEPS\n"
+    << "4 -- Iterative deepening depth-first search (IDDFS) STEPS\n"
+    << "Other -- Default -- Depth-first search (DFS)\n";
+    cin >> algorithm_option;
+
+    created_nodes_steps_passed[0] = 0;
+    created_nodes_steps_passed[1] = 0;
     graph = new Graph();
 
-    switch (choose) // https://stackoverflow.com/questions/34829955/what-is-causing-this-cannot-jump-from-switch-statement-to-this-case-label
+    // ---------- ALGORITHM ----------
+
+    // here we doing the choosed algorithm option & showing created nodes & passed steps
+    switch (algorithm_option) // https://stackoverflow.com/questions/34829955/what-is-causing-this-cannot-jump-from-switch-statement-to-this-case-label
     {
     case 0: // nothing, exit
     {
@@ -39,96 +45,81 @@ int main()
     }
     case 1: // DFS
     {
-        result = graph->contPreOrder(data);
-        cout << "Количество созданных вершин: " << data[0] << endl;
-        cout << "Количество шагов: " << data[1] << endl;
+        outcome = graph->contPreOrder(created_nodes_steps_passed);
+        cout << "Nodes created: " << created_nodes_steps_passed[0] << "\n";
+        cout << "Steps passed: " << created_nodes_steps_passed[1] << "\n";
         break;
     }
     case 2: // idDFS
     {
         int local_number = 0;
-        // NEED TO DELETE PREVIOUS RESULT ALLOCATION
-        result = nullptr;
-        while (result == nullptr)
+        while (outcome == nullptr)
         {
             delete graph;
             graph = new Graph();
             cout << "\n\nDepth: " << local_number << "\n";
-            result = graph->contPreOrderRestriction(local_number, data);
+            outcome = graph->contPreOrderRestriction(local_number, created_nodes_steps_passed);
             local_number = local_number + 1;
-            cout << "Количество созданных вершин: " << data[0] << endl;
-            cout << "Количество шагов: " << data[1] << endl;
-            data[0] = 0;
-            data[1] = 0;
+            cout << "Nodes created: " << created_nodes_steps_passed[0] << "\n";
+            cout << "Steps passed: " << created_nodes_steps_passed[1] << "\n";
+            created_nodes_steps_passed[0] = 0;
+            created_nodes_steps_passed[1] = 0;
         }
         break;
     }
     case 3: // DFS steps
     {
-        result = graph->contPreOrderBySteps(data);
-        cout << "Количество созданных вершин: " << data[0] << endl;
-        cout << "Количество шагов: " << data[1] << endl;
+        outcome = graph->contPreOrderBySteps(created_nodes_steps_passed);
+        cout << "Nodes created: " << created_nodes_steps_passed[0] << "\n";
+        cout << "Steps passed: " << created_nodes_steps_passed[1] << "\n";
         break;
     }
     case 4: // idDFS steps
     {
         // need to add
-        cout << "Количество созданных вершин: " << data[0] << endl;
-        cout << "Количество шагов: " << data[1] << endl;
+        cout << "Nodes created: " << created_nodes_steps_passed[0] << "\n";
+        cout << "Steps passed: " << created_nodes_steps_passed[1] << "\n";
         break;
     }
     default: // default DFS
     {
-        result = graph->contPreOrder(data);
-        cout << "Количество созданных вершин: " << data[0] << endl;
-        cout << "Количество шагов: " << data[1] << endl;
+        outcome = graph->contPreOrder(created_nodes_steps_passed);
+        cout << "Nodes created: " << created_nodes_steps_passed[0] << "\n";
+        cout << "Steps passed: " << created_nodes_steps_passed[1] << "\n";
         break;
     }
     }
-    /*if (choose == 2)
-    {
-        cout << "Введите ограничение:" << endl;
-        cin >> restriction;
-        result = tre.contPreOrderRestriction(restriction, data);
-    }
-    if (choose == 4)
-    {
-        cout << "Введите ограничение:" << endl;
-        cin >> restriction;
-        result = tre.contPreOrderRestrictionBySteps(restriction, data);
-    }*/
-    // ADD NAME/DELETE OLD METHODS
-    // UPDATE AND BUG FIX
 
     // ---------- FOUND PATH OUTPUT / NO FOUND PATH MESSAGE ----------
 
-    if (result != nullptr) // if result is not nullptr, print
+    // if there is path, we ask user if he wants to see it (yes or no),
+    // if he wants (y), we show it,
+    // if he doesn't want (n/other), we don't show it.
+    if (outcome != nullptr) // if outcome is not nullptr, print
     {
-        cout << "Итоговый путь:" << endl;
-        cur = result;
-        while (cur != nullptr)
+        char local_path = 'n';
+        cout << "Do you want to see the path? [y=yes/n=no/other=no]";
+        fflush(stdin);
+        cin >> local_path;
+        if (local_path == 'y')
         {
-            for (int i = 0; i < 3; i++)
-            {
-                for (int j = 0; j < 3; j++)
-                {
-                    cout << cur->arr[i][j] << " ";
-                }
-                cout << endl;
-            }
-            cout << endl;
-            cur = cur->parent;
+            Node::thePath(outcome);
         }
     }
     else
     {
-        cout << "Итоговый путь не найден.\n";
+        cout << "The path hasn't been found.\n";
     }
 
     // ---------- END ----------
 
+    // here we are freeing the nodes allocated memory
+    // (the nodes pointers are not freed because the has been
+    // freed with graph pointer, it has it's own destructor)
+    // and waiting user to press "enter" or something else
+    // to sontinue and finish
     delete graph;
     cout << "Press enter to exit...";
-    fflush(stdin); // hahaha, classic...
-    getchar(); // waiting enter
+    fflush(stdin);
+    getchar();
 }
