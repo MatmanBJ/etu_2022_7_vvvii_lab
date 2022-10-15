@@ -11,8 +11,9 @@ using namespace std;
 int main()
 {
     setlocale(LC_ALL, "Russian");
+
+    Tree* graph = nullptr; // https://stackoverflow.com/questions/18940175/cannot-delete-stdvector-stdarray
     Tree tre;
-    Tree* special_tree; // https://stackoverflow.com/questions/18940175/cannot-delete-stdvector-stdarray
     Node* result = new Node(0);
     Node* cur = new Node(0);
     int choose = 0;
@@ -21,55 +22,81 @@ int main()
     data[0] = 0;
     data[1] = 0;
     cout << "Выберите пункт:" << endl;
-    cout << "1 - Обход в глубину" << endl;
-    cout << "2 - Обход в глубину с ограничением" << endl;
-    cout << "3 - Обход в глубину по шагам" << endl;
-    cout << "4 - Обход в глубину с ограничением по шагам" << endl;
+    cout << "0 -- Exit\n";
+    cout << "1 -- Depth-first search (DFS)\n";
+    cout << "2 -- Iterative deepening depth-first search (IDDFS)\n";
+    cout << "3 -- Depth-first search (DFS) STEPS\n";
+    cout << "4 -- Iterative deepening depth-first search (IDDFS) STEPS\n";
+    cout << "Other -- Default -- Depth-first search (DFS)\n";
     cin >> choose;
-    if (choose == 1)
+
+    graph = new Tree();
+
+    switch (choose) // https://stackoverflow.com/questions/34829955/what-is-causing-this-cannot-jump-from-switch-statement-to-this-case-label
     {
-       result = tre.contPreOrder(data);
+    case 0: // nothing, exit
+    {
+        break;
     }
-    if (choose == 2)
+    case 1: // DFS
+    {
+        result = graph->contPreOrder(data);
+        break;
+    }
+    case 2: // idDFS
+    {
+        cout << "Введите ограничение:" << endl;
+        cin >> restriction;
+        int local_number = 0;
+        // NEED TO DELETE PREVIOUS RESULT ALLOCATION
+        result = nullptr;
+        while (result == nullptr && local_number <= restriction)
+        {
+            delete graph;
+            graph = new Tree();
+            cout << local_number << endl;
+            result = graph->contPreOrderRestriction(local_number, data);
+            local_number = local_number + 1;
+            cout << "Количество созданных вершин: " << data[0] << endl;
+            cout << "Количество шагов: " << data[1] << endl;
+            data[0] = 0;
+            data[1] = 0;
+        }
+        break;
+    }
+    case 3: // DFS steps
+    {
+        result = graph->contPreOrderBySteps(data);
+        break;
+    }
+    case 4: // idDFS steps
+    {
+        // need to add
+        break;
+    }
+    default: // default DFS
+    {
+        result = graph->contPreOrder(data);
+        break;
+    }
+    }
+    /*if (choose == 2)
     {
         cout << "Введите ограничение:" << endl;
         cin >> restriction;
         result = tre.contPreOrderRestriction(restriction, data);
-    }
-    if (choose == 3)
-    {
-       result = tre.contPreOrderBySteps(data);
     }
     if (choose == 4)
     {
         cout << "Введите ограничение:" << endl;
         cin >> restriction;
         result = tre.contPreOrderRestrictionBySteps(restriction, data);
-    }
-    // ADD SWITCH
+    }*/
     // ADD NAME/DELETE OLD METHODS
     // UPDATE AND BUG FIX
-    if (choose == 5)
-    {
-        cout << "Введите ограничение:" << endl;
-        cin >> restriction;
 
-        int local_number = 0;
-        // NEED TO DELETE PREVIOUS RESULT ALLOCATION
-        result = nullptr;
-        while (result == nullptr && local_number <= restriction)
-        {
-            special_tree = new Tree();
-            cout << local_number << endl;
-            result = special_tree->contPreOrderRestriction(local_number, data);
-            local_number = local_number + 1;
-            cout << "Количество созданных вершин: " << data[0] << endl;
-            cout << "Количество шагов: " << data[1] << endl;
-            data[0] = 0;
-            data[1] = 0;
-            delete special_tree;
-        }
-    }
+    // ---------- FOUND PATH OUTPUT / NO FOUND PATH MESSAGE ----------
+
     cout << "Количество созданных вершин: " << data[0] << endl;
     cout << "Количество шагов: " << data[1] << endl;
     if (result != nullptr)
@@ -94,7 +121,11 @@ int main()
     {
         cout << "Итоговый путь не найден.\n";
     }
-    cout << "Нажмите enter для завершения...";
+
+    // ---------- END ----------
+
+    delete graph;
+    cout << "Press enter to exit...";
     fflush(stdin); // hahaha, classic...
     getchar(); // waiting enter
 }
