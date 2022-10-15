@@ -134,14 +134,18 @@ Node* Tree::contPreOrderRestriction(int restriction, int* data) // in-depth meth
     cont.unset.insert(getString(root));
     cont.list.push_front(root);
     cur = root;
-    while (!cont.list.empty()) {
+    while (!cont.list.empty())
+    {
         cur = *(cont.list.begin());
         cont.list.pop_front();
         unlock(cur, data);
         data[1] = data[1] + 1;
-        if (cur->right != nullptr && cur->height < restriction) {
-            if (repeat(cur->right)) {
-                if (compare(cur->right)) {
+        if (cur->right != nullptr && cur->height < restriction)
+        {
+            if (repeat(cur->right))
+            {
+                if (compare(cur->right))
+                {
                     cout << "Найдено конечное состояние:" << endl;
                     printArr(cur->right);
                     return cur->right;
@@ -149,15 +153,19 @@ Node* Tree::contPreOrderRestriction(int restriction, int* data) // in-depth meth
                 cont.unset.insert(getString(cur->right));
                 cont.list.push_front(cur->right);
             }
-            else {
+            else
+            {
                 delete(cur->right);
                 cur->right = nullptr;
                 data[0] = data[0] - 1;
             }
         }
-        if (cur->mid_right != nullptr && cur->height < restriction) {
-            if (repeat(cur->mid_right)) {
-                if (compare(cur->mid_right)) {
+        if (cur->mid_right != nullptr && cur->height < restriction)
+        {
+            if (repeat(cur->mid_right))
+            {
+                if (compare(cur->mid_right))
+                {
                     cout << "Найдено конечное состояние:" << endl;
                     printArr(cur->mid_right);
                     return cur->mid_right;
@@ -165,15 +173,19 @@ Node* Tree::contPreOrderRestriction(int restriction, int* data) // in-depth meth
                 cont.unset.insert(getString(cur->mid_right));
                 cont.list.push_front(cur->mid_right);
             }
-            else {
+            else
+            {
                 delete(cur->mid_right);
                 cur->mid_right = nullptr;
                 data[0] = data[0] - 1;
             }
         }
-        if (cur->mid_left != nullptr && cur->height < restriction) {
-            if (repeat(cur->mid_left)) {
-                if (compare(cur->mid_left)) {
+        if (cur->mid_left != nullptr && cur->height < restriction)
+        {
+            if (repeat(cur->mid_left))
+            {
+                if (compare(cur->mid_left))
+                {
                     cout << "Найдено конечное состояние:" << endl;
                     printArr(cur->mid_left);
                     return cur->mid_left;
@@ -181,15 +193,19 @@ Node* Tree::contPreOrderRestriction(int restriction, int* data) // in-depth meth
                 cont.unset.insert(getString(cur->mid_left));
                 cont.list.push_front(cur->mid_left);
             }
-            else {
+            else
+            {
                 delete(cur->mid_left);
                 cur->mid_left = nullptr;
                 data[0] = data[0] - 1;
             }
         }
-        if (cur->left != nullptr && cur->height < restriction) {
-            if (repeat(cur->left)) {
-                if (compare(cur->left)) {
+        if (cur->left != nullptr && cur->height < restriction)
+        {
+            if (repeat(cur->left))
+            {
+                if (compare(cur->left))
+                {
                     cout << "Найдено конечное состояние:" << endl;
                     printArr(cur->left);
                     return cur->left;
@@ -207,6 +223,34 @@ Node* Tree::contPreOrderRestriction(int restriction, int* data) // in-depth meth
     return nullptr;
 }
 
+/*bool IDDFS(Node* node)
+{
+    int lim = 3;
+    bool e_code;
+    while ((e_code=DLS(node,lim)) != true || (e_code=DLS(node,lim)) != ERR)
+    {
+        lim++;
+    }
+    return e_code;
+}*/
+
+Node* Tree::iterativeDeepingDFS(int restriction, int* data)
+{
+    int local_number = 0;
+    Node* local_result = nullptr;
+    while (local_result == nullptr && local_number <= restriction)
+    {
+        cout << local_number << endl;
+        local_result = contPreOrderRestriction(local_number, data);
+        local_number = local_number + 1;
+        cout << "Количество созданных вершин: " << data[0] << endl;
+        cout << "Количество шагов: " << data[1] << endl;
+        data[0] = 0;
+        data[1] = 0;
+    }
+    return local_result;
+}
+
 Node* Tree::contPreOrderBySteps(int* data) // in-depth method by steps
 {
     Node* cur;
@@ -217,7 +261,8 @@ Node* Tree::contPreOrderBySteps(int* data) // in-depth method by steps
     cur = root;
     printDataKaim();
     system("pause");
-    while (!cont.list.empty()) {
+    while (!cont.list.empty())
+    {
         cur = *(cont.list.begin());
         cont.list.pop_front();
         cout << "Раскрываемая вершина:" << endl;
@@ -425,6 +470,7 @@ bool Tree::compare(Node* cur) {
             }
         }
     }
+    return true;
 }
 
 void Tree::printData(Node* cur) {

@@ -6,12 +6,14 @@
 #ifndef TREE_H
 #define TREE_H
 
-class Tree {
+class Tree
+{
 public:
     Tree();
     ~Tree();
     Node* contPreOrder(int*);
     Node* contPreOrderRestriction(int, int*);
+    Node* iterativeDeepingDFS(int restriction, int* data);
     Node* contPreOrderBySteps(int*);
     Node* contPreOrderRestrictionBySteps(int, int*);
     bool compare(Node*);
