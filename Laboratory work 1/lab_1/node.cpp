@@ -1,13 +1,13 @@
 #include <iostream>
 #include "./node.h"
 
-Node::Node(int hig)
+Node::Node(int local_depth)
 {
-    height = hig;
-    arr = new char* [3];
+    depth = local_depth;
+    elements = new char* [3];
     for (int i = 0; i < 3; i++)
     {
-        arr[i] = new char[3];
+        elements[i] = new char[3];
     }
     left = nullptr;
     mid_left = nullptr;
@@ -27,7 +27,7 @@ void Node::thePath (Node* local_outcome)
         {
             for (j = 0; j < 3; j++)
             {
-                cout << local_outcome->arr[i][j] << " ";
+                cout << local_outcome->elements[i][j] << " ";
             }
             cout << "\n";
         }

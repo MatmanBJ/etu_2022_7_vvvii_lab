@@ -7,11 +7,12 @@
 
 using namespace std;
 
-struct Node
+class Node
 {
-    Node(int hig);
-    char** arr;
-    int height;
+public:
+    Node(int local_depth);
+    char** elements;
+    int depth;
     struct Node* left;
     struct Node* mid_left;
     struct Node* mid_right;
@@ -23,7 +24,9 @@ struct Node
 typedef unordered_set<string> Myset;
 typedef list<Node*> List;
 
-struct Containers {
+class Containers
+{
+public:
     Myset unset;
     List list;
     List list_caim;

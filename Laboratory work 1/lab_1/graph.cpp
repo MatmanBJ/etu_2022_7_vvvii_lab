@@ -8,15 +8,15 @@ Graph::Graph()
     Node* startNode = new Node(0);
     Node* endNode = new Node(0);
 
-    (*startNode).arr[0][0] = ' ';
-    (*startNode).arr[0][1] = '4';
-    (*startNode).arr[0][2] = '3';
-    (*startNode).arr[1][0] = '6';
-    (*startNode).arr[1][1] = '2';
-    (*startNode).arr[1][2] = '1';
-    (*startNode).arr[2][0] = '7';
-    (*startNode).arr[2][1] = '5';
-    (*startNode).arr[2][2] = '8';
+    (*startNode).elements[0][0] = ' ';
+    (*startNode).elements[0][1] = '4';
+    (*startNode).elements[0][2] = '3';
+    (*startNode).elements[1][0] = '6';
+    (*startNode).elements[1][1] = '2';
+    (*startNode).elements[1][2] = '1';
+    (*startNode).elements[2][0] = '7';
+    (*startNode).elements[2][1] = '5';
+    (*startNode).elements[2][2] = '8';
 
     // ^^^^^^^^^ //
     // ^ - 4 3 ^ //
@@ -26,15 +26,15 @@ Graph::Graph()
     // ^ 7 5 8 ^ //
     // ^^^^^^^^^ //
 
-    (*endNode).arr[0][0] = '1';
-    (*endNode).arr[0][1] = '2';
-    (*endNode).arr[0][2] = '3';
-    (*endNode).arr[1][0] = '4';
-    (*endNode).arr[1][1] = ' ';
-    (*endNode).arr[1][2] = '5';
-    (*endNode).arr[2][0] = '6';
-    (*endNode).arr[2][1] = '7';
-    (*endNode).arr[2][2] = '8';
+    (*endNode).elements[0][0] = '1';
+    (*endNode).elements[0][1] = '2';
+    (*endNode).elements[0][2] = '3';
+    (*endNode).elements[1][0] = '4';
+    (*endNode).elements[1][1] = ' ';
+    (*endNode).elements[1][2] = '5';
+    (*endNode).elements[2][0] = '6';
+    (*endNode).elements[2][1] = '7';
+    (*endNode).elements[2][2] = '8';
 
     // ^^^^^^^^^ //
     // ^ 1 2 3 ^ //
@@ -170,7 +170,7 @@ Node* Graph::iterativeDFS(int restriction, int* data)
         cont.list.pop_front();
         unlock(cur, data);
         data[1] = data[1] + 1;
-        if (cur->right != nullptr && cur->height < restriction)
+        if (cur->right != nullptr && cur->depth < restriction)
         {
             if (repeat(cur->right))
             {
@@ -190,7 +190,7 @@ Node* Graph::iterativeDFS(int restriction, int* data)
                 data[0] = data[0] - 1;
             }
         }
-        if (cur->mid_right != nullptr && cur->height < restriction)
+        if (cur->mid_right != nullptr && cur->depth < restriction)
         {
             if (repeat(cur->mid_right))
             {
@@ -210,7 +210,7 @@ Node* Graph::iterativeDFS(int restriction, int* data)
                 data[0] = data[0] - 1;
             }
         }
-        if (cur->mid_left != nullptr && cur->height < restriction)
+        if (cur->mid_left != nullptr && cur->depth < restriction)
         {
             if (repeat(cur->mid_left))
             {
@@ -230,7 +230,7 @@ Node* Graph::iterativeDFS(int restriction, int* data)
                 data[0] = data[0] - 1;
             }
         }
-        if (cur->left != nullptr && cur->height < restriction)
+        if (cur->left != nullptr && cur->depth < restriction)
         {
             if (repeat(cur->left))
             {
@@ -374,7 +374,7 @@ Node* Graph::iterativeDFSBySteps(int restriction, int* data)
         unlock(cur, data);
         data[1] = data[1] + 1;
         printData(cur);
-        if (cur->right != nullptr && cur->height < restriction) {
+        if (cur->right != nullptr && cur->depth < restriction) {
             if (repeat(cur->right)) {
                 if (compare(cur->right)) {
                     cout << "End state found: " << endl;
@@ -392,7 +392,7 @@ Node* Graph::iterativeDFSBySteps(int restriction, int* data)
                 cout << "////////////////" << endl;
             }
         }
-        if (cur->mid_right != nullptr && cur->height < restriction) {
+        if (cur->mid_right != nullptr && cur->depth < restriction) {
             if (repeat(cur->mid_right)) {
                 if (compare(cur->mid_right)) {
                     cout << "End state found: " << endl;
@@ -410,7 +410,7 @@ Node* Graph::iterativeDFSBySteps(int restriction, int* data)
                 cout << "////////////////" << endl;
             }
         }
-        if (cur->mid_left != nullptr && cur->height < restriction) {
+        if (cur->mid_left != nullptr && cur->depth < restriction) {
             if (repeat(cur->mid_left)) {
                 if (compare(cur->mid_left)) {
                     cout << "End state found: " << endl;
@@ -428,7 +428,7 @@ Node* Graph::iterativeDFSBySteps(int restriction, int* data)
                 cout << "////////////////" << endl;
             }
         }
-        if (cur->left != nullptr && cur->height < restriction) {
+        if (cur->left != nullptr && cur->depth < restriction) {
             if (repeat(cur->left)) {
                 if (compare(cur->left)) {
                     cout << "End state found: " << endl;
@@ -473,7 +473,7 @@ bool Graph::compare(Node* cur) {
         for (int j = 0; j < 3; j++) {
             for (int y = 0; y < 3; y++) {
                 for (int x = 0; x < 3; x++) {
-                    if (cur->arr[i][j] == end->arr[y][x]) {
+                    if (cur->elements[i][j] == end->elements[y][x]) {
                         if (i != y || j != x) {
                             return false;
                         }
@@ -514,7 +514,7 @@ void Graph::printDataKaim() {
 void Graph::printArr(Node* cur) {
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
-            cout << cur->arr[i][j] << " ";
+            cout << cur->elements[i][j] << " ";
         }
         cout << endl;
     }
@@ -527,7 +527,7 @@ string Graph::getString(Node* cur)
     string str;
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
-            str.push_back((*cur).arr[i][j]);
+            str.push_back((*cur).elements[i][j]);
         }
     }
     return str;
@@ -539,7 +539,7 @@ void Graph::unlock(Node* cur, int* data)
     int x, y;
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
-            if ((*cur).arr[i][j] == ' ') {
+            if ((*cur).elements[i][j] == ' ') {
                 x = j;
                 y = i;
                 break;
@@ -548,29 +548,29 @@ void Graph::unlock(Node* cur, int* data)
     }
     if (x > 0) {
         (*cur).left = fillArr(cur);
-        (*cur).left->arr[y][x] = (*cur).left->arr[y][x - 1];
-        (*cur).left->arr[y][x - 1] = ' ';
+        (*cur).left->elements[y][x] = (*cur).left->elements[y][x - 1];
+        (*cur).left->elements[y][x - 1] = ' ';
         data[0] = data[0] + 1;
         (*cur).left->parent = cur;
     }
     if (x < 2) {
         (*cur).mid_right = fillArr(cur);
-        (*cur).mid_right->arr[y][x] = (*cur).mid_right->arr[y][x + 1];
-        (*cur).mid_right->arr[y][x + 1] = ' ';
+        (*cur).mid_right->elements[y][x] = (*cur).mid_right->elements[y][x + 1];
+        (*cur).mid_right->elements[y][x + 1] = ' ';
         data[0] = data[0] + 1;
         (*cur).mid_right->parent = cur;
     }
     if (y > 0) {
         (*cur).mid_left = fillArr(cur);
-        (*cur).mid_left->arr[y][x] = (*cur).mid_left->arr[y - 1][x];
-        (*cur).mid_left->arr[y - 1][x] = ' ';
+        (*cur).mid_left->elements[y][x] = (*cur).mid_left->elements[y - 1][x];
+        (*cur).mid_left->elements[y - 1][x] = ' ';
         data[0] = data[0] + 1;
         (*cur).mid_left->parent = cur;
     }
     if (y < 2) {
         (*cur).right = fillArr(cur);
-        (*cur).right->arr[y][x] = (*cur).right->arr[y + 1][x];
-        (*cur).right->arr[y + 1][x] = ' ';
+        (*cur).right->elements[y][x] = (*cur).right->elements[y + 1][x];
+        (*cur).right->elements[y + 1][x] = ' ';
         data[0] = data[0] + 1;
         (*cur).right->parent = cur;
     }
@@ -579,10 +579,10 @@ void Graph::unlock(Node* cur, int* data)
 // ---------- < FILL MATRIX VALUES > ----------
 Node* Graph::fillArr(Node* cur)
 {
-    Node* NewNode = new Node(cur->height + 1);
+    Node* NewNode = new Node(cur->depth + 1);
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
-            (*NewNode).arr[i][j] = (*cur).arr[i][j];
+            (*NewNode).elements[i][j] = (*cur).elements[i][j];
         }
     }
     return NewNode;
