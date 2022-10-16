@@ -45,7 +45,7 @@ int main()
     }
     case 1: // DFS
     {
-        outcome = graph->contPreOrder(created_nodes_steps_passed);
+        outcome = graph->dfs(created_nodes_steps_passed);
         cout << "Nodes created: " << created_nodes_steps_passed[0] << "\n";
         cout << "Steps passed: " << created_nodes_steps_passed[1] << "\n";
         break;
@@ -58,7 +58,7 @@ int main()
             delete graph;
             graph = new Graph();
             cout << "\n\nDepth: " << local_number << "\n";
-            outcome = graph->contPreOrderRestriction(local_number, created_nodes_steps_passed);
+            outcome = graph->iterativeDFS(local_number, created_nodes_steps_passed);
             local_number = local_number + 1;
             cout << "Nodes created: " << created_nodes_steps_passed[0] << "\n";
             cout << "Steps passed: " << created_nodes_steps_passed[1] << "\n";
@@ -69,7 +69,7 @@ int main()
     }
     case 3: // DFS steps
     {
-        outcome = graph->contPreOrderBySteps(created_nodes_steps_passed);
+        outcome = graph->dfsBySteps(created_nodes_steps_passed);
         cout << "Nodes created: " << created_nodes_steps_passed[0] << "\n";
         cout << "Steps passed: " << created_nodes_steps_passed[1] << "\n";
         break;
@@ -83,7 +83,7 @@ int main()
     }
     default: // default DFS
     {
-        outcome = graph->contPreOrder(created_nodes_steps_passed);
+        outcome = graph->dfs(created_nodes_steps_passed);
         cout << "Nodes created: " << created_nodes_steps_passed[0] << "\n";
         cout << "Steps passed: " << created_nodes_steps_passed[1] << "\n";
         break;

@@ -2,38 +2,60 @@
 #include "./node.h"
 #include "./graph.h"
 
-Graph::Graph() // Graph default constructor with given numbers
+// ---------- < Default Graph constructor > ----------
+Graph::Graph()
 {
-    Node* start = new Node(0);
-    Node* enda = new Node(0);
-    (*start).arr[0][0] = '6';
-    (*start).arr[0][1] = '3';
-    (*start).arr[0][2] = '4';
-    (*start).arr[1][0] = '2';
-    (*start).arr[1][1] = '5';
-    (*start).arr[1][2] = '8';
-    (*start).arr[2][0] = '7';
-    (*start).arr[2][1] = '1';
-    (*start).arr[2][2] = ' ';
-    (*enda).arr[0][0] = ' ';
-    (*enda).arr[0][1] = '1';
-    (*enda).arr[0][2] = '2';
-    (*enda).arr[1][0] = '3';
-    (*enda).arr[1][1] = '4';
-    (*enda).arr[1][2] = '5';
-    (*enda).arr[2][0] = '6';
-    (*enda).arr[2][1] = '7';
-    (*enda).arr[2][2] = '8';
-    root = start;
-    end = enda;
+    Node* startNode = new Node(0);
+    Node* endNode = new Node(0);
+
+    (*startNode).arr[0][0] = ' ';
+    (*startNode).arr[0][1] = '4';
+    (*startNode).arr[0][2] = '3';
+    (*startNode).arr[1][0] = '6';
+    (*startNode).arr[1][1] = '2';
+    (*startNode).arr[1][2] = '1';
+    (*startNode).arr[2][0] = '7';
+    (*startNode).arr[2][1] = '5';
+    (*startNode).arr[2][2] = '8';
+
+    // ^^^^^^^^^ //
+    // ^ - 4 3 ^ //
+    // ^^^^^^^^^ //
+    // ^ 6 2 1 ^ //
+    // ^^^^^^^^^ //
+    // ^ 7 5 8 ^ //
+    // ^^^^^^^^^ //
+
+    (*endNode).arr[0][0] = '1';
+    (*endNode).arr[0][1] = '2';
+    (*endNode).arr[0][2] = '3';
+    (*endNode).arr[1][0] = '4';
+    (*endNode).arr[1][1] = ' ';
+    (*endNode).arr[1][2] = '5';
+    (*endNode).arr[2][0] = '6';
+    (*endNode).arr[2][1] = '7';
+    (*endNode).arr[2][2] = '8';
+
+    // ^^^^^^^^^ //
+    // ^ 1 2 3 ^ //
+    // ^^^^^^^^^ //
+    // ^ 4 - 5 ^ //
+    // ^^^^^^^^^ //
+    // ^ 6 7 8 ^ //
+    // ^^^^^^^^^ //
+
+    root = startNode;
+    end = endNode;
 }
 
-Graph::~Graph() // Graph default destructor
+// ---------- < Default Graph destructor > ----------
+Graph::~Graph()
 {
     DestroyNode(root);
 }
 
-void Graph::DestroyNode(Node* node) // Graph destroyng node method
+// ---------- < Funtion for destroy node of graph > ----------
+void Graph::DestroyNode(Node* node)
 {
     if (node)
     {
@@ -45,16 +67,20 @@ void Graph::DestroyNode(Node* node) // Graph destroyng node method
     }
 }
 
-// ---------- DFS DEPTH ----------
+// --------------------------------------------------
+// ---------- <<< ALGORITHMS SEARCHING >>> ----------
+// --------------------------------------------------
 
-Node* Graph::contPreOrder(int* data) // in-depth method
+// ---------- < DFS DEPTH > ----------
+Node* Graph::dfs(int* data)
 {
     Node* cur;
-    cout << "Начальное состояние:" << endl;
+    cout << "Initial State: " << endl;
     printArr(root);
     cont.unset.insert(getString(root));
     (cont.list).push_front(root);
     cur = root;
+
     while (!cont.list.empty()) {
         cur = *(cont.list.begin());
         cont.list.pop_front();
@@ -63,7 +89,7 @@ Node* Graph::contPreOrder(int* data) // in-depth method
         if (cur->right != nullptr) {
             if (repeat(cur->right)) {
                 if (compare(cur->right)) {
-                    cout << "Найдено конечное состояние:" << endl;
+                    cout << "End state found: " << endl;
                     printArr(cur->right);
                     return cur->right;
                 }
@@ -79,7 +105,7 @@ Node* Graph::contPreOrder(int* data) // in-depth method
         if (cur->mid_right != nullptr) {
             if (repeat(cur->mid_right)) {
                 if (compare(cur->mid_right)) {
-                    cout << "Найдено конечное состояние:" << endl;
+                    cout << "End state found: " << endl;
                     printArr(cur->mid_right);
                     return cur->mid_right;
                 }
@@ -95,7 +121,7 @@ Node* Graph::contPreOrder(int* data) // in-depth method
         if (cur->mid_left != nullptr) {
             if (repeat(cur->mid_left)) {
                 if (compare(cur->mid_left)) {
-                    cout << "Найдено конечное состояние:" << endl;
+                    cout << "End state found: " << endl;
                     printArr(cur->mid_left);
                     return cur->mid_left;
                 }
@@ -111,7 +137,7 @@ Node* Graph::contPreOrder(int* data) // in-depth method
         if (cur->left != nullptr) {
             if (repeat(cur->left)) {
                 if (compare(cur->left)) {
-                    cout << "Найдено конечное состояние:" << endl;
+                    cout << "End state found: " << endl;
                     printArr(cur->left);
                     return cur->left;
                 }
@@ -128,16 +154,16 @@ Node* Graph::contPreOrder(int* data) // in-depth method
     return nullptr;
 }
 
-// ---------- DFS DEPTH LIMIT ----------
-
-Node* Graph::contPreOrderRestriction(int restriction, int* data) // in-depth method w/ restriction
+// ---------- < DFS DEPTH LIMIT > ----------
+Node* Graph::iterativeDFS(int restriction, int* data)
 {
     Node* cur;
-    cout << "Начальное состояние:" << endl;
+    cout << "Initial State:" << endl;
     printArr(root);
     cont.unset.insert(getString(root));
     cont.list.push_front(root);
     cur = root;
+
     while (!cont.list.empty())
     {
         cur = *(cont.list.begin());
@@ -150,7 +176,7 @@ Node* Graph::contPreOrderRestriction(int restriction, int* data) // in-depth met
             {
                 if (compare(cur->right))
                 {
-                    cout << "Найдено конечное состояние:" << endl;
+                    cout << "End state found:" << endl;
                     printArr(cur->right);
                     return cur->right;
                 }
@@ -170,7 +196,7 @@ Node* Graph::contPreOrderRestriction(int restriction, int* data) // in-depth met
             {
                 if (compare(cur->mid_right))
                 {
-                    cout << "Найдено конечное состояние:" << endl;
+                    cout << "End state found: " << endl;
                     printArr(cur->mid_right);
                     return cur->mid_right;
                 }
@@ -190,7 +216,7 @@ Node* Graph::contPreOrderRestriction(int restriction, int* data) // in-depth met
             {
                 if (compare(cur->mid_left))
                 {
-                    cout << "Найдено конечное состояние:" << endl;
+                    cout << "End state found: " << endl;
                     printArr(cur->mid_left);
                     return cur->mid_left;
                 }
@@ -210,7 +236,7 @@ Node* Graph::contPreOrderRestriction(int restriction, int* data) // in-depth met
             {
                 if (compare(cur->left))
                 {
-                    cout << "Найдено конечное состояние:" << endl;
+                    cout << "End state found: " << endl;
                     printArr(cur->left);
                     return cur->left;
                 }
@@ -227,32 +253,32 @@ Node* Graph::contPreOrderRestriction(int restriction, int* data) // in-depth met
     return nullptr;
 }
 
-// ---------- DFS DEPTH STEPS ----------
-
-Node* Graph::contPreOrderBySteps(int* data) // in-depth method by steps
+// ---------- < DFS DEPTH BY STEPS > ----------
+Node* Graph::dfsBySteps(int* data)
 {
     Node* cur;
-    cout << "Начальное состояние:" << endl;
+    cout << "Initial State: " << endl;
     printArr(root);
     cont.unset.insert(getString(root));
     cont.list.push_front(root);
     cur = root;
     printDataKaim();
     system("pause");
+
     while (!cont.list.empty())
     {
         cur = *(cont.list.begin());
         cont.list.pop_front();
-        cout << "Раскрываемая вершина:" << endl;
+        cout << "Revealed top: " << endl;
         printArr(cur);
-        cout << "Раскрытые вершины на этом шаге:" << endl;
+        cout << "Revealed vertices in this step: " << endl;
         unlock(cur, data);
         data[1] = data[1] + 1;
         printData(cur);
         if (cur->right != nullptr) {
             if (repeat(cur->right)) {
                 if (compare(cur->right)) {
-                    cout << "Найдено конечное состояние:" << endl;
+                    cout << "End state found: " << endl;
                     printArr(cur->right);
                     return cur->right;
                 }
@@ -260,7 +286,7 @@ Node* Graph::contPreOrderBySteps(int* data) // in-depth method by steps
                 cont.list.push_front(cur->right);
             }
             else {
-                cout << "Найдено повторное состояние:" << endl;
+                cout << "Found duplicate state: " << endl;
                 printArr(cur->right);
                 delete(cur->right);
                 data[0] = data[0] - 1;
@@ -270,7 +296,7 @@ Node* Graph::contPreOrderBySteps(int* data) // in-depth method by steps
         if (cur->mid_right != nullptr) {
             if (repeat(cur->mid_right)) {
                 if (compare(cur->mid_right)) {
-                    cout << "Найдено конечное состояние:" << endl;
+                    cout << "End state found: " << endl;
                     printArr(cur->mid_right);
                     return cur->mid_right;
                 }
@@ -278,7 +304,7 @@ Node* Graph::contPreOrderBySteps(int* data) // in-depth method by steps
                 cont.list.push_front(cur->mid_right);
             }
             else {
-                cout << "Найдено повторное состояние:" << endl;
+                cout << "Found duplicate state: " << endl;
                 printArr(cur->mid_right);
                 delete(cur->mid_right);
                 data[0] = data[0] - 1;
@@ -288,7 +314,7 @@ Node* Graph::contPreOrderBySteps(int* data) // in-depth method by steps
         if (cur->mid_left != nullptr) {
             if (repeat(cur->mid_left)) {
                 if (compare(cur->mid_left)) {
-                    cout << "Найдено конечное состояние:" << endl;
+                    cout << "End state found: " << endl;
                     printArr(cur->mid_left);
                     return cur->mid_left;
                 }
@@ -296,7 +322,7 @@ Node* Graph::contPreOrderBySteps(int* data) // in-depth method by steps
                 cont.list.push_front(cur->mid_left);
             }
             else {
-                cout << "Найдено повторное состояние:" << endl;
+                cout << "Found duplicate state: " << endl;
                 printArr(cur->mid_left);
                 delete(cur->mid_left);
                 data[0] = data[0] - 1;
@@ -306,7 +332,7 @@ Node* Graph::contPreOrderBySteps(int* data) // in-depth method by steps
         if (cur->left != nullptr) {
             if (repeat(cur->left)) {
                 if (compare(cur->left)) {
-                    cout << "Найдено конечное состояние:" << endl;
+                    cout << "End state found: " << endl;
                     printArr(cur->left);
                     return cur->left;
                 }
@@ -314,7 +340,7 @@ Node* Graph::contPreOrderBySteps(int* data) // in-depth method by steps
                 cont.list.push_front(cur->left);
             }
             else {
-                cout << "Найдено повторное состояние:" << endl;
+                cout << "Found duplicate state: " << endl;
                 printArr(cur->left);
                 delete(cur->left);
                 data[0] = data[0] - 1;
@@ -327,31 +353,31 @@ Node* Graph::contPreOrderBySteps(int* data) // in-depth method by steps
     return nullptr;
 }
 
-// ---------- DFS DEPTH LIMIT STEPS ----------
-
-Node* Graph::contPreOrderRestrictionBySteps(int restriction, int* data) // in-depth method w/ restriction by steps
+// ---------- < DFS DEPTH LIMIT BY STEPS > ----------
+Node* Graph::iterativeDFSBySteps(int restriction, int* data)
 {
     Node* cur;
-    cout << "Начальное состояние:" << endl;
+    cout << "Initial State: " << endl;
     printArr(root);
     cont.unset.insert(getString(root));
     cont.list.push_front(root);
     cur = root;
     printDataKaim();
     system("pause");
+
     while (!cont.list.empty()) {
         cur = *(cont.list.begin());
         cont.list.pop_front();
-        cout << "Раскрываемая вершина:" << endl;
+        cout << "Revealed top: " << endl;
         printArr(cur);
-        cout << "Раскрытые вершины на этом шаге:" << endl;
+        cout << "Revealed vertices in this step: " << endl;
         unlock(cur, data);
         data[1] = data[1] + 1;
         printData(cur);
         if (cur->right != nullptr && cur->height < restriction) {
             if (repeat(cur->right)) {
                 if (compare(cur->right)) {
-                    cout << "Найдено конечное состояние:" << endl;
+                    cout << "End state found: " << endl;
                     printArr(cur->right);
                     return cur->right;
                 }
@@ -359,7 +385,7 @@ Node* Graph::contPreOrderRestrictionBySteps(int restriction, int* data) // in-de
                 cont.list.push_front(cur->right);
             }
             else {
-                cout << "Найдено повторное состояние:" << endl;
+                cout << "Found duplicate state: " << endl;
                 printArr(cur->right);
                 delete(cur->right);
                 data[0] = data[0] - 1;
@@ -369,7 +395,7 @@ Node* Graph::contPreOrderRestrictionBySteps(int restriction, int* data) // in-de
         if (cur->mid_right != nullptr && cur->height < restriction) {
             if (repeat(cur->mid_right)) {
                 if (compare(cur->mid_right)) {
-                    cout << "Найдено конечное состояние:" << endl;
+                    cout << "End state found: " << endl;
                     printArr(cur->mid_right);
                     return cur->mid_right;
                 }
@@ -377,7 +403,7 @@ Node* Graph::contPreOrderRestrictionBySteps(int restriction, int* data) // in-de
                 cont.list.push_front(cur->mid_right);
             }
             else {
-                cout << "Найдено повторное состояние:" << endl;
+                cout << "Found duplicate state: " << endl;
                 printArr(cur->mid_right);
                 delete(cur->mid_right);
                 data[0] = data[0] - 1;
@@ -387,7 +413,7 @@ Node* Graph::contPreOrderRestrictionBySteps(int restriction, int* data) // in-de
         if (cur->mid_left != nullptr && cur->height < restriction) {
             if (repeat(cur->mid_left)) {
                 if (compare(cur->mid_left)) {
-                    cout << "Найдено конечное состояние:" << endl;
+                    cout << "End state found: " << endl;
                     printArr(cur->mid_left);
                     return cur->mid_left;
                 }
@@ -395,7 +421,7 @@ Node* Graph::contPreOrderRestrictionBySteps(int restriction, int* data) // in-de
                 cont.list.push_front(cur->mid_left);
             }
             else {
-                cout << "Найдено повторное состояние:" << endl;
+                cout << "Found duplicate state: " << endl;
                 printArr(cur->mid_left);
                 delete(cur->mid_left);
                 data[0] = data[0] - 1;
@@ -405,7 +431,7 @@ Node* Graph::contPreOrderRestrictionBySteps(int restriction, int* data) // in-de
         if (cur->left != nullptr && cur->height < restriction) {
             if (repeat(cur->left)) {
                 if (compare(cur->left)) {
-                    cout << "Найдено конечное состояние:" << endl;
+                    cout << "End state found: " << endl;
                     printArr(cur->left);
                     return cur->left;
                 }
@@ -413,7 +439,7 @@ Node* Graph::contPreOrderRestrictionBySteps(int restriction, int* data) // in-de
                 cont.list.push_front(cur->left);
             }
             else {
-                cout << "Найдено повторное состояние:" << endl;
+                cout << "Found duplicate state: " << endl;
                 printArr(cur->left);
                 delete(cur->left);
                 data[0] = data[0] - 1;
@@ -426,6 +452,11 @@ Node* Graph::contPreOrderRestrictionBySteps(int restriction, int* data) // in-de
     return nullptr;
 }
 
+// --------------------------------------------------
+// ---------- <<< OTHER FUNTIONS >>> ----------
+// --------------------------------------------------
+
+// ---------- < REPEAT NODES > ----------
 bool Graph::repeat(Node* cur) {
     if (cont.unset.find(getString(cur)) == cont.unset.end()) {
         return true;
@@ -436,6 +467,7 @@ bool Graph::repeat(Node* cur) {
 
 }
 
+// ---------- < COMPARE NODES > ----------
 bool Graph::compare(Node* cur) {
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
@@ -453,6 +485,7 @@ bool Graph::compare(Node* cur) {
     return true;
 }
 
+// ---------- < PRINT DATA NODE> ----------
 void Graph::printData(Node* cur) {
     if (cur->left != nullptr) {
         printArr(cur->left);
@@ -468,14 +501,16 @@ void Graph::printData(Node* cur) {
     }
 }
 
+// ---------- < PRINT ALL SUCCESS END STATES TO FINISH PATH > ----------
 void Graph::printDataKaim() {
     list <Node*>::iterator iter;
-    cout << "Содержание каймы:" << endl;
+    cout << "Border content: " << endl;
     for (iter = cont.list.begin(); iter != cont.list.end(); iter++) {
         printArr(*iter);
     }
 }
 
+// ---------- < PRINT ONLY NODE MATRIX > ----------
 void Graph::printArr(Node* cur) {
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
@@ -486,6 +521,7 @@ void Graph::printArr(Node* cur) {
     cout << endl;
 }
 
+// ---------- < GETSTRING > ----------
 string Graph::getString(Node* cur)
 {
     string str;
@@ -497,6 +533,7 @@ string Graph::getString(Node* cur)
     return str;
 }
 
+// ---------- < ??????????? > ----------
 void Graph::unlock(Node* cur, int* data)
 {
     int x, y;
@@ -539,6 +576,7 @@ void Graph::unlock(Node* cur, int* data)
     }
 }
 
+// ---------- < FILL MATRIX VALUES > ----------
 Node* Graph::fillArr(Node* cur)
 {
     Node* NewNode = new Node(cur->height + 1);
