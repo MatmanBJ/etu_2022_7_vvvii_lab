@@ -16,7 +16,6 @@ int main()
     // number of nodes created & steps passed.
     // also we get choosed algorithm option by user
     int algorithm_option = 0;
-    //int* created_nodes_steps_passed = new int[2];
     int created_nodes_steps_passed[2];
     Graph* graph = nullptr; // https://stackoverflow.com/questions/18940175/cannot-delete-stdvector-stdarray
     Node* outcome = nullptr;

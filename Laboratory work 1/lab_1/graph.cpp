@@ -72,278 +72,181 @@ void Graph::DestroyNode(Node* node)
 // --------------------------------------------------
 
 // ---------- < DFS DEPTH > ----------
-Node* Graph::dfs(int* data)
+Node* Graph::dfs(int* local_nodes_steps)
 {
-    Node* cur;
-    cout << "Initial State: " << endl;
+    Node* local_node;
+    Node* local_returned_node = nullptr;
+    cout << "Initial State:\n";
     printArr(root);
     cont.unset.insert(getString(root));
     (cont.list).push_front(root);
-    cur = root;
+    local_node = root;
 
-    while (!cont.list.empty()) {
-        cur = *(cont.list.begin());
+    while (!cont.list.empty())
+    {
+        local_node = *(cont.list.begin());
         cont.list.pop_front();
-        unlock(cur, data);
-        data[1] = data[1] + 1;
-        if (cur->right != nullptr) {
-            if (repeat(cur->right)) {
-                if (compare(cur->right)) {
-                    cout << "End state found: " << endl;
-                    printArr(cur->right);
-                    return cur->right;
-                }
-                cont.unset.insert(getString(cur->right));
-                cont.list.push_front(cur->right);
-            }
-            else {
-                delete(cur->right);
-                cur->right = nullptr;
-                data[0] = data[0] - 1;
-            }
+        this->unlock(local_node, local_nodes_steps);
+        local_nodes_steps[1] = local_nodes_steps[1] + 1;
+
+        local_returned_node = this->end_or_again_or_else (&(local_node->right), local_nodes_steps, true); // moving
+        if (local_returned_node != nullptr)
+        {
+            return local_returned_node;
         }
-        if (cur->mid_right != nullptr) {
-            if (repeat(cur->mid_right)) {
-                if (compare(cur->mid_right)) {
-                    cout << "End state found: " << endl;
-                    printArr(cur->mid_right);
-                    return cur->mid_right;
-                }
-                cont.unset.insert(getString(cur->mid_right));
-                cont.list.push_front(cur->mid_right);
-            }
-            else {
-                delete(cur->mid_right);
-                cur->mid_right = nullptr;
-                data[0] = data[0] - 1;
-            }
+        local_returned_node = this->end_or_again_or_else (&(local_node->mid_right), local_nodes_steps, true); // swap possibility
+        if (local_returned_node != nullptr)
+        {
+            return local_returned_node;
         }
-        if (cur->mid_left != nullptr) {
-            if (repeat(cur->mid_left)) {
-                if (compare(cur->mid_left)) {
-                    cout << "End state found: " << endl;
-                    printArr(cur->mid_left);
-                    return cur->mid_left;
-                }
-                cont.unset.insert(getString(cur->mid_left));
-                cont.list.push_front(cur->mid_left);
-            }
-            else {
-                delete(cur->mid_left);
-                cur->mid_left = nullptr;
-                data[0] = data[0] - 1;
-            }
+        local_returned_node = this->end_or_again_or_else (&(local_node->mid_left), local_nodes_steps, true); // swap possibility
+        if (local_returned_node != nullptr)
+        {
+            return local_returned_node;
         }
-        if (cur->left != nullptr) {
-            if (repeat(cur->left)) {
-                if (compare(cur->left)) {
-                    cout << "End state found: " << endl;
-                    printArr(cur->left);
-                    return cur->left;
-                }
-                cont.unset.insert(getString(cur->left));
-                cont.list.push_front(cur->left);
-            }
-            else {
-                delete(cur->left);
-                cur->left = nullptr;
-                data[0] = data[0] - 1;
-            }
+        local_returned_node = this->end_or_again_or_else (&(local_node->left), local_nodes_steps, true); // moving
+        if (local_returned_node != nullptr)
+        {
+            return local_returned_node;
         }
     }
     return nullptr;
 }
 
 // ---------- < DFS DEPTH LIMIT > ----------
-Node* Graph::iterativeDFS(int restriction, int* data)
+Node* Graph::iterativeDFS(int restriction, int* local_nodes_steps)
 {
-    Node* cur;
-    cout << "Initial State:" << endl;
+    Node* local_node;
+    Node* local_returned_node = nullptr;
+    cout << "Initial State:\n";
     printArr(root);
     cont.unset.insert(getString(root));
     cont.list.push_front(root);
-    cur = root;
+    local_node = root;
 
     while (!cont.list.empty())
     {
-        cur = *(cont.list.begin());
+        local_node = *(cont.list.begin());
         cont.list.pop_front();
-        unlock(cur, data);
-        data[1] = data[1] + 1;
-        if (cur->right != nullptr && cur->depth < restriction)
+        unlock(local_node, local_nodes_steps);
+        local_nodes_steps[1] = local_nodes_steps[1] + 1;
+
+        // https://cplusplus.com/doc/tutorial/operators/
+        local_returned_node = this->end_or_again_or_else (&(local_node->right), local_nodes_steps, local_node->depth < restriction ? true : false);
+        if (local_returned_node != nullptr)
         {
-            if (repeat(cur->right))
-            {
-                if (compare(cur->right))
-                {
-                    cout << "End state found:" << endl;
-                    printArr(cur->right);
-                    return cur->right;
-                }
-                cont.unset.insert(getString(cur->right));
-                cont.list.push_front(cur->right);
-            }
-            else
-            {
-                delete(cur->right);
-                cur->right = nullptr;
-                data[0] = data[0] - 1;
-            }
+            return local_returned_node;
         }
-        if (cur->mid_right != nullptr && cur->depth < restriction)
+        local_returned_node = this->end_or_again_or_else (&(local_node->mid_right), local_nodes_steps, local_node->depth < restriction ? true : false);
+        if (local_returned_node != nullptr)
         {
-            if (repeat(cur->mid_right))
-            {
-                if (compare(cur->mid_right))
-                {
-                    cout << "End state found: " << endl;
-                    printArr(cur->mid_right);
-                    return cur->mid_right;
-                }
-                cont.unset.insert(getString(cur->mid_right));
-                cont.list.push_front(cur->mid_right);
-            }
-            else
-            {
-                delete(cur->mid_right);
-                cur->mid_right = nullptr;
-                data[0] = data[0] - 1;
-            }
+            return local_returned_node;
         }
-        if (cur->mid_left != nullptr && cur->depth < restriction)
+        local_returned_node = this->end_or_again_or_else (&(local_node->mid_left), local_nodes_steps, local_node->depth < restriction ? true : false);
+        if (local_returned_node != nullptr)
         {
-            if (repeat(cur->mid_left))
-            {
-                if (compare(cur->mid_left))
-                {
-                    cout << "End state found: " << endl;
-                    printArr(cur->mid_left);
-                    return cur->mid_left;
-                }
-                cont.unset.insert(getString(cur->mid_left));
-                cont.list.push_front(cur->mid_left);
-            }
-            else
-            {
-                delete(cur->mid_left);
-                cur->mid_left = nullptr;
-                data[0] = data[0] - 1;
-            }
+            return local_returned_node;
         }
-        if (cur->left != nullptr && cur->depth < restriction)
+        local_returned_node = this->end_or_again_or_else (&(local_node->left), local_nodes_steps, local_node->depth < restriction ? true : false);
+        if (local_returned_node != nullptr)
         {
-            if (repeat(cur->left))
-            {
-                if (compare(cur->left))
-                {
-                    cout << "End state found: " << endl;
-                    printArr(cur->left);
-                    return cur->left;
-                }
-                cont.unset.insert(getString(cur->left));
-                cont.list.push_front(cur->left);
-            }
-            else {
-                delete(cur->left);
-                cur->left = nullptr;
-                data[0] = data[0] - 1;
-            }
+            return local_returned_node;
         }
     }
     return nullptr;
 }
 
 // ---------- < DFS DEPTH BY STEPS > ----------
-Node* Graph::dfsBySteps(int* data)
+Node* Graph::dfsBySteps(int* local_nodes_steps)
 {
-    Node* cur;
-    cout << "Initial State: " << endl;
+    Node* local_node;
+    cout << "Initial State:\n";
     printArr(root);
     cont.unset.insert(getString(root));
     cont.list.push_front(root);
-    cur = root;
+    local_node = root;
     printDataKaim();
     system("pause");
 
     while (!cont.list.empty())
     {
-        cur = *(cont.list.begin());
+        local_node = *(cont.list.begin());
         cont.list.pop_front();
         cout << "Revealed top: " << endl;
-        printArr(cur);
+        printArr(local_node);
         cout << "Revealed vertices in this step: " << endl;
-        unlock(cur, data);
-        data[1] = data[1] + 1;
-        printData(cur);
-        if (cur->right != nullptr) {
-            if (repeat(cur->right)) {
-                if (compare(cur->right)) {
+        unlock(local_node, local_nodes_steps);
+        local_nodes_steps[1] = local_nodes_steps[1] + 1;
+        printData(local_node);
+        if (local_node->right != nullptr) {
+            if (repeat(local_node->right)) {
+                if (compare(local_node->right)) {
                     cout << "End state found: " << endl;
-                    printArr(cur->right);
-                    return cur->right;
+                    printArr(local_node->right);
+                    return local_node->right;
                 }
-                cont.unset.insert(getString(cur->right));
-                cont.list.push_front(cur->right);
+                cont.unset.insert(getString(local_node->right));
+                cont.list.push_front(local_node->right);
             }
             else {
                 cout << "Found duplicate state: " << endl;
-                printArr(cur->right);
-                delete(cur->right);
-                data[0] = data[0] - 1;
+                printArr(local_node->right);
+                delete(local_node->right);
+                local_nodes_steps[0] = local_nodes_steps[0] - 1;
                 cout << "////////////////" << endl;
             }
         }
-        if (cur->mid_right != nullptr) {
-            if (repeat(cur->mid_right)) {
-                if (compare(cur->mid_right)) {
+        if (local_node->mid_right != nullptr) {
+            if (repeat(local_node->mid_right)) {
+                if (compare(local_node->mid_right)) {
                     cout << "End state found: " << endl;
-                    printArr(cur->mid_right);
-                    return cur->mid_right;
+                    printArr(local_node->mid_right);
+                    return local_node->mid_right;
                 }
-                cont.unset.insert(getString(cur->mid_right));
-                cont.list.push_front(cur->mid_right);
+                cont.unset.insert(getString(local_node->mid_right));
+                cont.list.push_front(local_node->mid_right);
             }
             else {
                 cout << "Found duplicate state: " << endl;
-                printArr(cur->mid_right);
-                delete(cur->mid_right);
-                data[0] = data[0] - 1;
+                printArr(local_node->mid_right);
+                delete(local_node->mid_right);
+                local_nodes_steps[0] = local_nodes_steps[0] - 1;
                 cout << "////////////////" << endl;
             }
         }
-        if (cur->mid_left != nullptr) {
-            if (repeat(cur->mid_left)) {
-                if (compare(cur->mid_left)) {
+        if (local_node->mid_left != nullptr) {
+            if (repeat(local_node->mid_left)) {
+                if (compare(local_node->mid_left)) {
                     cout << "End state found: " << endl;
-                    printArr(cur->mid_left);
-                    return cur->mid_left;
+                    printArr(local_node->mid_left);
+                    return local_node->mid_left;
                 }
-                cont.unset.insert(getString(cur->mid_left));
-                cont.list.push_front(cur->mid_left);
+                cont.unset.insert(getString(local_node->mid_left));
+                cont.list.push_front(local_node->mid_left);
             }
             else {
                 cout << "Found duplicate state: " << endl;
-                printArr(cur->mid_left);
-                delete(cur->mid_left);
-                data[0] = data[0] - 1;
+                printArr(local_node->mid_left);
+                delete(local_node->mid_left);
+                local_nodes_steps[0] = local_nodes_steps[0] - 1;
                 cout << "////////////////" << endl;
             }
         }
-        if (cur->left != nullptr) {
-            if (repeat(cur->left)) {
-                if (compare(cur->left)) {
+        if (local_node->left != nullptr) {
+            if (repeat(local_node->left)) {
+                if (compare(local_node->left)) {
                     cout << "End state found: " << endl;
-                    printArr(cur->left);
-                    return cur->left;
+                    printArr(local_node->left);
+                    return local_node->left;
                 }
-                cont.unset.insert(getString(cur->left));
-                cont.list.push_front(cur->left);
+                cont.unset.insert(getString(local_node->left));
+                cont.list.push_front(local_node->left);
             }
             else {
                 cout << "Found duplicate state: " << endl;
-                printArr(cur->left);
-                delete(cur->left);
-                data[0] = data[0] - 1;
+                printArr(local_node->left);
+                delete(local_node->left);
+                local_nodes_steps[0] = local_nodes_steps[0] - 1;
                 cout << "////////////////" << endl;
             }
         }
@@ -354,95 +257,95 @@ Node* Graph::dfsBySteps(int* data)
 }
 
 // ---------- < DFS DEPTH LIMIT BY STEPS > ----------
-Node* Graph::iterativeDFSBySteps(int restriction, int* data)
+Node* Graph::iterativeDFSBySteps(int restriction, int* local_nodes_steps)
 {
-    Node* cur;
-    cout << "Initial State: " << endl;
+    Node* local_node;
+    cout << "Initial State:\n";
     printArr(root);
     cont.unset.insert(getString(root));
     cont.list.push_front(root);
-    cur = root;
+    local_node = root;
     printDataKaim();
     system("pause");
 
     while (!cont.list.empty()) {
-        cur = *(cont.list.begin());
+        local_node = *(cont.list.begin());
         cont.list.pop_front();
         cout << "Revealed top: " << endl;
-        printArr(cur);
+        printArr(local_node);
         cout << "Revealed vertices in this step: " << endl;
-        unlock(cur, data);
-        data[1] = data[1] + 1;
-        printData(cur);
-        if (cur->right != nullptr && cur->depth < restriction) {
-            if (repeat(cur->right)) {
-                if (compare(cur->right)) {
+        unlock(local_node, local_nodes_steps);
+        local_nodes_steps[1] = local_nodes_steps[1] + 1;
+        printData(local_node);
+        if (local_node->right != nullptr && local_node->depth < restriction) {
+            if (repeat(local_node->right)) {
+                if (compare(local_node->right)) {
                     cout << "End state found: " << endl;
-                    printArr(cur->right);
-                    return cur->right;
+                    printArr(local_node->right);
+                    return local_node->right;
                 }
-                cont.unset.insert(getString(cur->right));
-                cont.list.push_front(cur->right);
+                cont.unset.insert(getString(local_node->right));
+                cont.list.push_front(local_node->right);
             }
             else {
                 cout << "Found duplicate state: " << endl;
-                printArr(cur->right);
-                delete(cur->right);
-                data[0] = data[0] - 1;
+                printArr(local_node->right);
+                delete(local_node->right);
+                local_nodes_steps[0] = local_nodes_steps[0] - 1;
                 cout << "////////////////" << endl;
             }
         }
-        if (cur->mid_right != nullptr && cur->depth < restriction) {
-            if (repeat(cur->mid_right)) {
-                if (compare(cur->mid_right)) {
+        if (local_node->mid_right != nullptr && local_node->depth < restriction) {
+            if (repeat(local_node->mid_right)) {
+                if (compare(local_node->mid_right)) {
                     cout << "End state found: " << endl;
-                    printArr(cur->mid_right);
-                    return cur->mid_right;
+                    printArr(local_node->mid_right);
+                    return local_node->mid_right;
                 }
-                cont.unset.insert(getString(cur->mid_right));
-                cont.list.push_front(cur->mid_right);
+                cont.unset.insert(getString(local_node->mid_right));
+                cont.list.push_front(local_node->mid_right);
             }
             else {
                 cout << "Found duplicate state: " << endl;
-                printArr(cur->mid_right);
-                delete(cur->mid_right);
-                data[0] = data[0] - 1;
+                printArr(local_node->mid_right);
+                delete(local_node->mid_right);
+                local_nodes_steps[0] = local_nodes_steps[0] - 1;
                 cout << "////////////////" << endl;
             }
         }
-        if (cur->mid_left != nullptr && cur->depth < restriction) {
-            if (repeat(cur->mid_left)) {
-                if (compare(cur->mid_left)) {
+        if (local_node->mid_left != nullptr && local_node->depth < restriction) {
+            if (repeat(local_node->mid_left)) {
+                if (compare(local_node->mid_left)) {
                     cout << "End state found: " << endl;
-                    printArr(cur->mid_left);
-                    return cur->mid_left;
+                    printArr(local_node->mid_left);
+                    return local_node->mid_left;
                 }
-                cont.unset.insert(getString(cur->mid_left));
-                cont.list.push_front(cur->mid_left);
+                cont.unset.insert(getString(local_node->mid_left));
+                cont.list.push_front(local_node->mid_left);
             }
             else {
                 cout << "Found duplicate state: " << endl;
-                printArr(cur->mid_left);
-                delete(cur->mid_left);
-                data[0] = data[0] - 1;
+                printArr(local_node->mid_left);
+                delete(local_node->mid_left);
+                local_nodes_steps[0] = local_nodes_steps[0] - 1;
                 cout << "////////////////" << endl;
             }
         }
-        if (cur->left != nullptr && cur->depth < restriction) {
-            if (repeat(cur->left)) {
-                if (compare(cur->left)) {
+        if (local_node->left != nullptr && local_node->depth < restriction) {
+            if (repeat(local_node->left)) {
+                if (compare(local_node->left)) {
                     cout << "End state found: " << endl;
-                    printArr(cur->left);
-                    return cur->left;
+                    printArr(local_node->left);
+                    return local_node->left;
                 }
-                cont.unset.insert(getString(cur->left));
-                cont.list.push_front(cur->left);
+                cont.unset.insert(getString(local_node->left));
+                cont.list.push_front(local_node->left);
             }
             else {
                 cout << "Found duplicate state: " << endl;
-                printArr(cur->left);
-                delete(cur->left);
-                data[0] = data[0] - 1;
+                printArr(local_node->left);
+                delete(local_node->left);
+                local_nodes_steps[0] = local_nodes_steps[0] - 1;
                 cout << "////////////////" << endl;
             }
         }
@@ -457,8 +360,8 @@ Node* Graph::iterativeDFSBySteps(int restriction, int* data)
 // --------------------------------------------------
 
 // ---------- < REPEAT NODES > ----------
-bool Graph::repeat(Node* cur) {
-    if (cont.unset.find(getString(cur)) == cont.unset.end()) {
+bool Graph::repeat(Node* local_node) {
+    if (cont.unset.find(getString(local_node)) == cont.unset.end()) {
         return true;
     }
     else {
@@ -468,12 +371,12 @@ bool Graph::repeat(Node* cur) {
 }
 
 // ---------- < COMPARE NODES > ----------
-bool Graph::compare(Node* cur) {
+bool Graph::compare(Node* local_node) {
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
             for (int y = 0; y < 3; y++) {
                 for (int x = 0; x < 3; x++) {
-                    if (cur->elements[i][j] == end->elements[y][x]) {
+                    if (local_node->elements[i][j] == end->elements[y][x]) {
                         if (i != y || j != x) {
                             return false;
                         }
@@ -486,18 +389,18 @@ bool Graph::compare(Node* cur) {
 }
 
 // ---------- < PRINT DATA NODE> ----------
-void Graph::printData(Node* cur) {
-    if (cur->left != nullptr) {
-        printArr(cur->left);
+void Graph::printData(Node* local_node) {
+    if (local_node->left != nullptr) {
+        printArr(local_node->left);
     }
-    if (cur->mid_left != nullptr) {
-        printArr(cur->mid_left);
+    if (local_node->mid_left != nullptr) {
+        printArr(local_node->mid_left);
     }
-    if (cur->mid_right != nullptr) {
-        printArr(cur->mid_right);
+    if (local_node->mid_right != nullptr) {
+        printArr(local_node->mid_right);
     }
-    if (cur->right != nullptr) {
-        printArr(cur->right);
+    if (local_node->right != nullptr) {
+        printArr(local_node->right);
     }
 }
 
@@ -511,10 +414,10 @@ void Graph::printDataKaim() {
 }
 
 // ---------- < PRINT ONLY NODE MATRIX > ----------
-void Graph::printArr(Node* cur) {
+void Graph::printArr(Node* local_node) {
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
-            cout << cur->elements[i][j] << " ";
+            cout << local_node->elements[i][j] << " ";
         }
         cout << endl;
     }
@@ -522,24 +425,26 @@ void Graph::printArr(Node* cur) {
 }
 
 // ---------- < GETSTRING > ----------
-string Graph::getString(Node* cur)
+string Graph::getString(Node* local_node)
 {
     string str;
-    for (int i = 0; i < 3; i++) {
-        for (int j = 0; j < 3; j++) {
-            str.push_back((*cur).elements[i][j]);
+    for (int i = 0; i < 3; i++)
+    {
+        for (int j = 0; j < 3; j++)
+        {
+            str.push_back((*local_node).elements[i][j]);
         }
     }
     return str;
 }
 
 // ---------- < ??????????? > ----------
-void Graph::unlock(Node* cur, int* data)
+void Graph::unlock(Node* local_node, int* local_nodes_steps)
 {
     int x, y;
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
-            if ((*cur).elements[i][j] == ' ') {
+            if ((*local_node).elements[i][j] == ' ') {
                 x = j;
                 y = i;
                 break;
@@ -547,43 +452,71 @@ void Graph::unlock(Node* cur, int* data)
         }
     }
     if (x > 0) {
-        (*cur).left = fillArr(cur);
-        (*cur).left->elements[y][x] = (*cur).left->elements[y][x - 1];
-        (*cur).left->elements[y][x - 1] = ' ';
-        data[0] = data[0] + 1;
-        (*cur).left->parent = cur;
+        (*local_node).left = fillArr(local_node);
+        (*local_node).left->elements[y][x] = (*local_node).left->elements[y][x - 1];
+        (*local_node).left->elements[y][x - 1] = ' ';
+        local_nodes_steps[0] = local_nodes_steps[0] + 1;
+        (*local_node).left->parent = local_node;
     }
     if (x < 2) {
-        (*cur).mid_right = fillArr(cur);
-        (*cur).mid_right->elements[y][x] = (*cur).mid_right->elements[y][x + 1];
-        (*cur).mid_right->elements[y][x + 1] = ' ';
-        data[0] = data[0] + 1;
-        (*cur).mid_right->parent = cur;
+        (*local_node).mid_right = fillArr(local_node);
+        (*local_node).mid_right->elements[y][x] = (*local_node).mid_right->elements[y][x + 1];
+        (*local_node).mid_right->elements[y][x + 1] = ' ';
+        local_nodes_steps[0] = local_nodes_steps[0] + 1;
+        (*local_node).mid_right->parent = local_node;
     }
     if (y > 0) {
-        (*cur).mid_left = fillArr(cur);
-        (*cur).mid_left->elements[y][x] = (*cur).mid_left->elements[y - 1][x];
-        (*cur).mid_left->elements[y - 1][x] = ' ';
-        data[0] = data[0] + 1;
-        (*cur).mid_left->parent = cur;
+        (*local_node).mid_left = fillArr(local_node);
+        (*local_node).mid_left->elements[y][x] = (*local_node).mid_left->elements[y - 1][x];
+        (*local_node).mid_left->elements[y - 1][x] = ' ';
+        local_nodes_steps[0] = local_nodes_steps[0] + 1;
+        (*local_node).mid_left->parent = local_node;
     }
     if (y < 2) {
-        (*cur).right = fillArr(cur);
-        (*cur).right->elements[y][x] = (*cur).right->elements[y + 1][x];
-        (*cur).right->elements[y + 1][x] = ' ';
-        data[0] = data[0] + 1;
-        (*cur).right->parent = cur;
+        (*local_node).right = fillArr(local_node);
+        (*local_node).right->elements[y][x] = (*local_node).right->elements[y + 1][x];
+        (*local_node).right->elements[y + 1][x] = ' ';
+        local_nodes_steps[0] = local_nodes_steps[0] + 1;
+        (*local_node).right->parent = local_node;
     }
 }
 
 // ---------- < FILL MATRIX VALUES > ----------
-Node* Graph::fillArr(Node* cur)
+Node* Graph::fillArr(Node* local_node)
 {
-    Node* NewNode = new Node(cur->depth + 1);
+    Node* NewNode = new Node(local_node->depth + 1);
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
-            (*NewNode).elements[i][j] = (*cur).elements[i][j];
+            (*NewNode).elements[i][j] = (*local_node).elements[i][j];
         }
     }
     return NewNode;
+}
+
+// ---------- < COMPARING IF IT'S END, OR IF IT'S EXISTING NODE, OR IF IT'S NEW, BUT NOT THE END > ----------
+Node* Graph::end_or_again_or_else (Node** local_node_pointer, int* local_nodes_steps, bool local_limit_check)
+{
+    if (*local_node_pointer != nullptr && local_limit_check == true)
+    {
+        if (this->repeat(*local_node_pointer))
+        {
+            if (this->compare(*local_node_pointer))
+            {
+                cout << "End state found:\n";
+                this->printArr(*local_node_pointer);
+                return *local_node_pointer;
+            }
+            this->cont.unset.insert(getString(*local_node_pointer));
+            this->cont.list.push_front(*local_node_pointer);
+            return nullptr;
+        }
+        else
+        {
+            delete(*local_node_pointer);
+            *local_node_pointer = nullptr;
+            local_nodes_steps[0] = local_nodes_steps[0] - 1;
+            return *local_node_pointer;
+        }
+    }
+    return nullptr;
 }
