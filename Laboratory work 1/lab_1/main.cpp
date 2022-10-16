@@ -112,7 +112,7 @@ int main()
         cin >> local_path;
         if (local_path == 'y')
         {
-            Node::thePath(outcome);
+            Node::finalPath(outcome);
         }
     }
     else

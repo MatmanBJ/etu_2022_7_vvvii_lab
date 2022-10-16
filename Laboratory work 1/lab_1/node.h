@@ -18,18 +18,7 @@ public:
     struct Node* mid_right;
     struct Node* right;
     struct Node* parent;
-    static void thePath(Node*);
-};
-
-typedef unordered_set<string> Myset;
-typedef list<Node*> List;
-
-class Containers
-{
-public:
-    Myset unset;
-    List list;
-    List list_caim;
+    static void finalPath(Node*);
 };
 
 #endif

@@ -16,7 +16,7 @@ Node::Node(int local_depth)
     parent = nullptr;
 }
 
-void Node::thePath (Node* local_outcome)
+void Node::finalPath (Node* local_outcome)
 {
     int i = 0;
     int j = 0;
