@@ -89,22 +89,22 @@ Node* Graph::dfs(int* local_nodes_steps)
         this->unlock(local_node, local_nodes_steps);
         local_nodes_steps[1] = local_nodes_steps[1] + 1;
 
-        local_returned_node = this->end_or_again_or_else (&(local_node->right), local_nodes_steps, true); // moving
+        local_returned_node = this->end_or_again_or_else (&(local_node->right), local_nodes_steps, true, false); // swap possibility/moving possibility
         if (local_returned_node != nullptr)
         {
             return local_returned_node;
         }
-        local_returned_node = this->end_or_again_or_else (&(local_node->mid_right), local_nodes_steps, true); // swap possibility
+        local_returned_node = this->end_or_again_or_else (&(local_node->mid_right), local_nodes_steps, true, false); // swap possibility/moving possibility
         if (local_returned_node != nullptr)
         {
             return local_returned_node;
         }
-        local_returned_node = this->end_or_again_or_else (&(local_node->mid_left), local_nodes_steps, true); // swap possibility
+        local_returned_node = this->end_or_again_or_else (&(local_node->mid_left), local_nodes_steps, true, false); // swap possibility/moving possibility
         if (local_returned_node != nullptr)
         {
             return local_returned_node;
         }
-        local_returned_node = this->end_or_again_or_else (&(local_node->left), local_nodes_steps, true); // moving
+        local_returned_node = this->end_or_again_or_else (&(local_node->left), local_nodes_steps, true, false); // swap possibility/moving possibility
         if (local_returned_node != nullptr)
         {
             return local_returned_node;
@@ -132,22 +132,22 @@ Node* Graph::iterativeDFS(int restriction, int* local_nodes_steps)
         local_nodes_steps[1] = local_nodes_steps[1] + 1;
 
         // https://cplusplus.com/doc/tutorial/operators/
-        local_returned_node = this->end_or_again_or_else (&(local_node->right), local_nodes_steps, local_node->depth < restriction ? true : false);
+        local_returned_node = this->end_or_again_or_else (&(local_node->right), local_nodes_steps, local_node->depth < restriction ? true : false, false); // swap possibility/moving possibility
         if (local_returned_node != nullptr)
         {
             return local_returned_node;
         }
-        local_returned_node = this->end_or_again_or_else (&(local_node->mid_right), local_nodes_steps, local_node->depth < restriction ? true : false);
+        local_returned_node = this->end_or_again_or_else (&(local_node->mid_right), local_nodes_steps, local_node->depth < restriction ? true : false, false); // swap possibility/moving possibility
         if (local_returned_node != nullptr)
         {
             return local_returned_node;
         }
-        local_returned_node = this->end_or_again_or_else (&(local_node->mid_left), local_nodes_steps, local_node->depth < restriction ? true : false);
+        local_returned_node = this->end_or_again_or_else (&(local_node->mid_left), local_nodes_steps, local_node->depth < restriction ? true : false, false); // swap possibility/moving possibility
         if (local_returned_node != nullptr)
         {
             return local_returned_node;
         }
-        local_returned_node = this->end_or_again_or_else (&(local_node->left), local_nodes_steps, local_node->depth < restriction ? true : false);
+        local_returned_node = this->end_or_again_or_else (&(local_node->left), local_nodes_steps, local_node->depth < restriction ? true : false, false); // swap possibility/moving possibility
         if (local_returned_node != nullptr)
         {
             return local_returned_node;
@@ -160,98 +160,57 @@ Node* Graph::iterativeDFS(int restriction, int* local_nodes_steps)
 Node* Graph::dfsBySteps(int* local_nodes_steps)
 {
     Node* local_node;
+    Node* local_returned_node = nullptr;
     cout << "Initial State:\n";
     printArr(root);
     cont.unset.insert(getString(root));
     cont.list.push_front(root);
     local_node = root;
     printDataKaim();
-    system("pause");
+
+    cout << "Press enter to next step...";
+    fflush(stdin);
+    getchar();
 
     while (!cont.list.empty())
     {
         local_node = *(cont.list.begin());
         cont.list.pop_front();
-        cout << "Revealed top: " << endl;
+        cout << "\n---------- BEGIN OF STEP ----------\n";
+        cout << "Revealed top:\n";
         printArr(local_node);
-        cout << "Revealed vertices in this step: " << endl;
+        cout << "Revealed vertices in this step:\n";
         unlock(local_node, local_nodes_steps);
         local_nodes_steps[1] = local_nodes_steps[1] + 1;
         printData(local_node);
-        if (local_node->right != nullptr) {
-            if (repeat(local_node->right)) {
-                if (compare(local_node->right)) {
-                    cout << "End state found: " << endl;
-                    printArr(local_node->right);
-                    return local_node->right;
-                }
-                cont.unset.insert(getString(local_node->right));
-                cont.list.push_front(local_node->right);
-            }
-            else {
-                cout << "Found duplicate state: " << endl;
-                printArr(local_node->right);
-                delete(local_node->right);
-                local_nodes_steps[0] = local_nodes_steps[0] - 1;
-                cout << "////////////////" << endl;
-            }
+
+        local_returned_node = this->end_or_again_or_else (&(local_node->right), local_nodes_steps, true, true); // swap possibility/moving possibility
+        if (local_returned_node != nullptr)
+        {
+            return local_returned_node;
         }
-        if (local_node->mid_right != nullptr) {
-            if (repeat(local_node->mid_right)) {
-                if (compare(local_node->mid_right)) {
-                    cout << "End state found: " << endl;
-                    printArr(local_node->mid_right);
-                    return local_node->mid_right;
-                }
-                cont.unset.insert(getString(local_node->mid_right));
-                cont.list.push_front(local_node->mid_right);
-            }
-            else {
-                cout << "Found duplicate state: " << endl;
-                printArr(local_node->mid_right);
-                delete(local_node->mid_right);
-                local_nodes_steps[0] = local_nodes_steps[0] - 1;
-                cout << "////////////////" << endl;
-            }
+        local_returned_node = this->end_or_again_or_else (&(local_node->mid_right), local_nodes_steps, true, true); // swap possibility/moving possibility
+        if (local_returned_node != nullptr)
+        {
+            return local_returned_node;
         }
-        if (local_node->mid_left != nullptr) {
-            if (repeat(local_node->mid_left)) {
-                if (compare(local_node->mid_left)) {
-                    cout << "End state found: " << endl;
-                    printArr(local_node->mid_left);
-                    return local_node->mid_left;
-                }
-                cont.unset.insert(getString(local_node->mid_left));
-                cont.list.push_front(local_node->mid_left);
-            }
-            else {
-                cout << "Found duplicate state: " << endl;
-                printArr(local_node->mid_left);
-                delete(local_node->mid_left);
-                local_nodes_steps[0] = local_nodes_steps[0] - 1;
-                cout << "////////////////" << endl;
-            }
+        local_returned_node = this->end_or_again_or_else (&(local_node->mid_left), local_nodes_steps, true, true); // swap possibility/moving possibility
+        if (local_returned_node != nullptr)
+        {
+            return local_returned_node;
         }
-        if (local_node->left != nullptr) {
-            if (repeat(local_node->left)) {
-                if (compare(local_node->left)) {
-                    cout << "End state found: " << endl;
-                    printArr(local_node->left);
-                    return local_node->left;
-                }
-                cont.unset.insert(getString(local_node->left));
-                cont.list.push_front(local_node->left);
-            }
-            else {
-                cout << "Found duplicate state: " << endl;
-                printArr(local_node->left);
-                delete(local_node->left);
-                local_nodes_steps[0] = local_nodes_steps[0] - 1;
-                cout << "////////////////" << endl;
-            }
+        local_returned_node = this->end_or_again_or_else (&(local_node->left), local_nodes_steps, true, true); // swap possibility/moving possibility
+        if (local_returned_node != nullptr)
+        {
+            return local_returned_node;
         }
+
         printDataKaim();
-        system("pause");
+
+        cout << "---------- END OF STEP ----------\n\n";
+        cout << "Press enter to next step...";
+        fflush(stdin);
+        getchar();
     }
     return nullptr;
 }
@@ -260,97 +219,56 @@ Node* Graph::dfsBySteps(int* local_nodes_steps)
 Node* Graph::iterativeDFSBySteps(int restriction, int* local_nodes_steps)
 {
     Node* local_node;
+    Node* local_returned_node = nullptr;
     cout << "Initial State:\n";
     printArr(root);
     cont.unset.insert(getString(root));
     cont.list.push_front(root);
     local_node = root;
     printDataKaim();
-    system("pause");
+
+    cout << "Press enter to next step...";
+    fflush(stdin);
+    getchar();
 
     while (!cont.list.empty()) {
         local_node = *(cont.list.begin());
         cont.list.pop_front();
+        cout << "\n---------- BEGIN OF STEP ----------\n";
         cout << "Revealed top: " << endl;
         printArr(local_node);
         cout << "Revealed vertices in this step: " << endl;
         unlock(local_node, local_nodes_steps);
         local_nodes_steps[1] = local_nodes_steps[1] + 1;
         printData(local_node);
-        if (local_node->right != nullptr && local_node->depth < restriction) {
-            if (repeat(local_node->right)) {
-                if (compare(local_node->right)) {
-                    cout << "End state found: " << endl;
-                    printArr(local_node->right);
-                    return local_node->right;
-                }
-                cont.unset.insert(getString(local_node->right));
-                cont.list.push_front(local_node->right);
-            }
-            else {
-                cout << "Found duplicate state: " << endl;
-                printArr(local_node->right);
-                delete(local_node->right);
-                local_nodes_steps[0] = local_nodes_steps[0] - 1;
-                cout << "////////////////" << endl;
-            }
+
+        local_returned_node = this->end_or_again_or_else (&(local_node->right), local_nodes_steps, local_node->depth < restriction ? true : false, true); // swap possibility/moving possibility
+        if (local_returned_node != nullptr)
+        {
+            return local_returned_node;
         }
-        if (local_node->mid_right != nullptr && local_node->depth < restriction) {
-            if (repeat(local_node->mid_right)) {
-                if (compare(local_node->mid_right)) {
-                    cout << "End state found: " << endl;
-                    printArr(local_node->mid_right);
-                    return local_node->mid_right;
-                }
-                cont.unset.insert(getString(local_node->mid_right));
-                cont.list.push_front(local_node->mid_right);
-            }
-            else {
-                cout << "Found duplicate state: " << endl;
-                printArr(local_node->mid_right);
-                delete(local_node->mid_right);
-                local_nodes_steps[0] = local_nodes_steps[0] - 1;
-                cout << "////////////////" << endl;
-            }
+        local_returned_node = this->end_or_again_or_else (&(local_node->mid_right), local_nodes_steps, local_node->depth < restriction ? true : false, true); // swap possibility/moving possibility
+        if (local_returned_node != nullptr)
+        {
+            return local_returned_node;
         }
-        if (local_node->mid_left != nullptr && local_node->depth < restriction) {
-            if (repeat(local_node->mid_left)) {
-                if (compare(local_node->mid_left)) {
-                    cout << "End state found: " << endl;
-                    printArr(local_node->mid_left);
-                    return local_node->mid_left;
-                }
-                cont.unset.insert(getString(local_node->mid_left));
-                cont.list.push_front(local_node->mid_left);
-            }
-            else {
-                cout << "Found duplicate state: " << endl;
-                printArr(local_node->mid_left);
-                delete(local_node->mid_left);
-                local_nodes_steps[0] = local_nodes_steps[0] - 1;
-                cout << "////////////////" << endl;
-            }
+        local_returned_node = this->end_or_again_or_else (&(local_node->mid_left), local_nodes_steps, local_node->depth < restriction ? true : false, true); // swap possibility/moving possibility
+        if (local_returned_node != nullptr)
+        {
+            return local_returned_node;
         }
-        if (local_node->left != nullptr && local_node->depth < restriction) {
-            if (repeat(local_node->left)) {
-                if (compare(local_node->left)) {
-                    cout << "End state found: " << endl;
-                    printArr(local_node->left);
-                    return local_node->left;
-                }
-                cont.unset.insert(getString(local_node->left));
-                cont.list.push_front(local_node->left);
-            }
-            else {
-                cout << "Found duplicate state: " << endl;
-                printArr(local_node->left);
-                delete(local_node->left);
-                local_nodes_steps[0] = local_nodes_steps[0] - 1;
-                cout << "////////////////" << endl;
-            }
+        local_returned_node = this->end_or_again_or_else (&(local_node->left), local_nodes_steps, local_node->depth < restriction ? true : false, true); // swap possibility/moving possibility
+        if (local_returned_node != nullptr)
+        {
+            return local_returned_node;
         }
+        
         printDataKaim();
-        system("pause");
+
+        cout << "---------- END OF STEP ----------\n\n";
+        cout << "Press enter to next step...";
+        fflush(stdin);
+        getchar();
     }
     return nullptr;
 }
@@ -494,7 +412,7 @@ Node* Graph::fillArr(Node* local_node)
 }
 
 // ---------- < COMPARING IF IT'S END, OR IF IT'S EXISTING NODE, OR IF IT'S NEW, BUT NOT THE END > ----------
-Node* Graph::end_or_again_or_else (Node** local_node_pointer, int* local_nodes_steps, bool local_limit_check)
+Node* Graph::end_or_again_or_else (Node** local_node_pointer, int* local_nodes_steps, bool local_limit_check, bool local_steps_output)
 {
     if (*local_node_pointer != nullptr && local_limit_check == true)
     {
@@ -506,15 +424,35 @@ Node* Graph::end_or_again_or_else (Node** local_node_pointer, int* local_nodes_s
                 this->printArr(*local_node_pointer);
                 return *local_node_pointer;
             }
+            if (local_steps_output == true)
+            {
+                cout << "The node has NOT been created before, including it to graph:\n";
+                printArr(*local_node_pointer);
+            }
             this->cont.unset.insert(getString(*local_node_pointer));
             this->cont.list.push_front(*local_node_pointer);
+            if (local_steps_output == true)
+            {
+                cout << "Number of UNIQUE nodes we created: " << local_nodes_steps[0] << "\n"; // UNIQUE means we don't count any of similar nodes
+                cout << "Number of CURRENT step we passed: " << local_nodes_steps[1] << "\n\n";
+            }
             return nullptr;
         }
         else
         {
+            if (local_steps_output == true)
+            {
+                cout << "The node, that has been created before, created again:\n";
+                printArr(*local_node_pointer);
+            }
             delete(*local_node_pointer);
             *local_node_pointer = nullptr;
             local_nodes_steps[0] = local_nodes_steps[0] - 1;
+            if (local_steps_output == true)
+            {
+                cout << "Number of UNIQUE nodes we created: " << local_nodes_steps[0] << "\n"; // UNIQUE means we don't count any of similar nodes
+                cout << "Number of CURRENT step we passed: " << local_nodes_steps[1] << "\n\n";
+            }
             return *local_node_pointer;
         }
     }

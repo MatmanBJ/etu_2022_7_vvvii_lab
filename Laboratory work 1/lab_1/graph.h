@@ -19,7 +19,7 @@ public:
     void unlock(Node* local_node, int* local_nodes_steps);
     string getString(Node* local_node);
     Node* fillArr(Node* local_node);
-    Node* end_or_again_or_else (Node** local_node_pointer, int* local_nodes_steps, bool local_limit_check);
+    Node* end_or_again_or_else (Node** local_node_pointer, int* local_nodes_steps, bool local_limit_check, bool local_steps_output);
     void printData(Node* local_node);
     void printArr(Node* local_node);
     void printDataKaim();

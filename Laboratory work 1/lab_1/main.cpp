@@ -75,9 +75,19 @@ int main()
     }
     case 4: // idDFS steps
     {
-        // need to add
-        cout << "Nodes created: " << created_nodes_steps_passed[0] << "\n";
-        cout << "Steps passed: " << created_nodes_steps_passed[1] << "\n";
+        int local_number = 0;
+        while (outcome == nullptr)
+        {
+            delete graph;
+            graph = new Graph();
+            cout << "\n\nDepth: " << local_number << "\n";
+            outcome = graph->iterativeDFSBySteps(local_number, created_nodes_steps_passed);
+            local_number = local_number + 1;
+            cout << "Nodes created: " << created_nodes_steps_passed[0] << "\n";
+            cout << "Steps passed: " << created_nodes_steps_passed[1] << "\n";
+            created_nodes_steps_passed[0] = 0;
+            created_nodes_steps_passed[1] = 0;
+        }
         break;
     }
     default: // default DFS
