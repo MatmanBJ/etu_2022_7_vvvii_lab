@@ -1,0 +1,8 @@
+﻿  graph.cpp
+  main.cpp
+C:\Users\Ren\Desktop\II\etu_2022_7_vvvii_lab\Laboratory work 1\lab_1\main.cpp(10,1): warning C4005: _HAS_ITERATOR_DEBUGGING: изменение макроопределения
+A:\Programms\Visual Studio\IDE\VC\Tools\MSVC\14.24.28314\include\yvals.h(103): message : см. предыдущее определение "_HAS_ITERATOR_DEBUGGING"
+  node.cpp
+  Создание кода...
+  LINK : не найден или не выполнена сборка A:\Programms\Visual Studio\Projects\IsIntellect\Debug\IsIntellect.exe при последней инкрементной компоновке; выполняется полная компоновка
+  IsIntellect.vcxproj -> A:\Programms\Visual Studio\Projects\IsIntellect\Debug\IsIntellect.exe
