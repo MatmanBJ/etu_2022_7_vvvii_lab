@@ -2,7 +2,6 @@
 #include <unordered_set>
 #include <list>
 #include <SFML\Graphics.hpp>
-
 #include <queue>
 
 #ifndef NODE_H
@@ -25,6 +24,6 @@ public:
 
     int priority;
 };
-auto comparator = [](const Node* l, const Node* r)->bool {return l->priority > r->priority; };
+
 
 #endif

@@ -42,7 +42,6 @@ int main()
             << "4 -- A*(h2)\n"
             << "Other -- Default -- h1\n";
         cin >> algorithm_settingsOption;
-        //ÇÄÅÑÜ ÍÀÄÎ ÄÎÁÀÂÈÒÜ ÂÎÇÌÎÆÍÎÑÒÜ ÂÅÐÍÓÒÜÑß ÍÀÇÀÄ ------------------------------------------------------
 
         created_nodes_steps_passed[0] = 0;
         created_nodes_steps_passed[1] = 0;
@@ -68,13 +67,14 @@ int main()
         }
         case 2: // idDFS
         {
+            graph->root->priority = 14;
             int local_number = 0;
             while (outcome == nullptr)
             {
                 delete graph;
                 graph = new Graph();
                 cout << "\n\nDepth: " << local_number << "\n";
-                outcome = graph->iterativeDFS(local_number, created_nodes_steps_passed);
+                outcome = graph->iterativeDFS(local_number, created_nodes_steps_passed, algorithm_settingsOption);
                 local_number = local_number + 1;
                 cout << "Nodes created: " << created_nodes_steps_passed[0] << "\n";
                 cout << "Steps passed: " << created_nodes_steps_passed[1] << "\n";
@@ -85,20 +85,22 @@ int main()
         }
         case 3: // DFS steps
         {
-            outcome = graph->dfsBySteps(created_nodes_steps_passed);
+            graph->root->priority = 8;
+            outcome = graph->dfsBySteps(created_nodes_steps_passed, algorithm_settingsOption);
             cout << "Nodes created: " << created_nodes_steps_passed[0] << "\n";
             cout << "Steps passed: " << created_nodes_steps_passed[1] << "\n";
             break;
         }
         case 4: // idDFS steps
         {
+            graph->root->priority = 14;
             int local_number = 0;
             while (outcome == nullptr)
             {
                 delete graph;
                 graph = new Graph();
                 cout << "\n\nDepth: " << local_number << "\n";
-                outcome = graph->iterativeDFSBySteps(local_number, created_nodes_steps_passed);
+                outcome = graph->iterativeDFSBySteps(local_number, created_nodes_steps_passed, algorithm_settingsOption);
                 local_number = local_number + 1;
                 cout << "Nodes created: " << created_nodes_steps_passed[0] << "\n";
                 cout << "Steps passed: " << created_nodes_steps_passed[1] << "\n";

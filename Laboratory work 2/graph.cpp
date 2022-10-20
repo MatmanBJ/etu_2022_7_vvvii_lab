@@ -77,14 +77,12 @@ void Graph::DestroyNode(Node* node)
 // ---------- < DFS DEPTH > ----------
 Node* Graph::dfs(int* local_nodes_steps, int choose)
 {
-    Queue_p queue_prioritet(comparator);
-
     Node* local_node =  new Node(0);
     Node* local_returned_node = nullptr;
     cout << "Initial State:\n";
     printMatixNode(root);
     unsetDataNodes.insert(getString(root));
-    queue_prioritet.push(root);
+    priority_queue.push(root);
     //list_allPath.push_front(root);
     local_node = root;
 
@@ -93,31 +91,31 @@ Node* Graph::dfs(int* local_nodes_steps, int choose)
     this->RenderLoad(local_node);
     /*----------------------------------------------RENDERING------------------------------------------------*/
 
-    while (!queue_prioritet.empty())
+    while (!priority_queue.empty())
     {
         //local_node = *(list_allPath.begin());
-        local_node = queue_prioritet.top();
-        queue_prioritet.pop();
+        local_node = priority_queue.top();
+        priority_queue.pop();
         //list_allPath.pop_front();
         this->uncoverNodes(local_node, local_nodes_steps, false, choose);
         local_nodes_steps[1] = local_nodes_steps[1] + 1;
 
-        local_returned_node = this->end_or_again_or_else (&(local_node->right), local_nodes_steps, true, false, queue_prioritet); // swap possibility/moving possibility
+        local_returned_node = this->end_or_again_or_else (&(local_node->right), local_nodes_steps, true, false); // swap possibility/moving possibility
         if (local_returned_node != nullptr)
         {
             return local_returned_node;
         }
-        local_returned_node = this->end_or_again_or_else (&(local_node->down), local_nodes_steps, true, false, queue_prioritet); // swap possibility/moving possibility
+        local_returned_node = this->end_or_again_or_else (&(local_node->down), local_nodes_steps, true, false); // swap possibility/moving possibility
         if (local_returned_node != nullptr)
         {
             return local_returned_node;
         }
-        local_returned_node = this->end_or_again_or_else (&(local_node->up), local_nodes_steps, true, false, queue_prioritet); // swap possibility/moving possibility
+        local_returned_node = this->end_or_again_or_else (&(local_node->up), local_nodes_steps, true, false); // swap possibility/moving possibility
         if (local_returned_node != nullptr)
         {
             return local_returned_node;
         }
-        local_returned_node = this->end_or_again_or_else (&(local_node->left), local_nodes_steps, true, false, queue_prioritet); // swap possibility/moving possibility
+        local_returned_node = this->end_or_again_or_else (&(local_node->left), local_nodes_steps, true, false); // swap possibility/moving possibility
         if (local_returned_node != nullptr)
         {
             return local_returned_node;
@@ -142,26 +140,30 @@ Node* Graph::dfs(int* local_nodes_steps, int choose)
 }
 
 // ---------- < DFS DEPTH LIMIT > ----------
-Node* Graph::iterativeDFS(int restriction, int* local_nodes_steps)
+Node* Graph::iterativeDFS(int restriction, int* local_nodes_steps, int choose)
 {
-    Node* local_node;
+    Node* local_node = new Node(0);
     Node* local_returned_node = nullptr;
     cout << "Initial State:\n";
     printMatixNode(root);
     unsetDataNodes.insert(getString(root));
-    list_allPath.push_front(root);
+    //list_allPath.push_front(root);
+    priority_queue.push(root);
     local_node = root;
+    uncoverNodes(local_node, local_nodes_steps, false, choose);
 
     /*----------------------------------------------RENDERING------------------------------------------------*/
     RenderWindow window(VideoMode(300, 300), "My window");
     this->RenderLoad(local_node);
     /*----------------------------------------------RENDERING------------------------------------------------*/
 
-    while (!list_allPath.empty())
+    while (!priority_queue.empty())
     {
-        local_node = *(list_allPath.begin());
-        list_allPath.pop_front();
-        //uncoverNodes(local_node, local_nodes_steps, false);
+        //local_node = *(list_allPath.begin());
+        local_node = priority_queue.top();
+        priority_queue.pop();
+        //list_allPath.pop_front();
+        uncoverNodes(local_node, local_nodes_steps, false, choose);
         local_nodes_steps[1] = local_nodes_steps[1] + 1;
 
         /*----------------------------------------------RENDERING------------------------------------------------*/
@@ -180,22 +182,22 @@ Node* Graph::iterativeDFS(int restriction, int* local_nodes_steps)
         /*----------------------------------------------RENDERING------------------------------------------------*/
 
         // https://cplusplus.com/doc/tutorial/operators/
-  //      local_returned_node = this->end_or_again_or_else (&(local_node->right), local_nodes_steps, local_node->depth < restriction ? true : false, false); // swap possibility/moving possibility
+        local_returned_node = this->end_or_again_or_else (&(local_node->right), local_nodes_steps, local_node->depth < restriction ? true : false, false); // swap possibility/moving possibility
         if (local_returned_node != nullptr)
         {
             return local_returned_node;
         }
-   //     local_returned_node = this->end_or_again_or_else (&(local_node->down), local_nodes_steps, local_node->depth < restriction ? true : false, false); // swap possibility/moving possibility
+        local_returned_node = this->end_or_again_or_else (&(local_node->down), local_nodes_steps, local_node->depth < restriction ? true : false, false); // swap possibility/moving possibility
         if (local_returned_node != nullptr)
         {
             return local_returned_node;
         }
-  //      local_returned_node = this->end_or_again_or_else (&(local_node->up), local_nodes_steps, local_node->depth < restriction ? true : false, false); // swap possibility/moving possibility
+        local_returned_node = this->end_or_again_or_else (&(local_node->up), local_nodes_steps, local_node->depth < restriction ? true : false, false); // swap possibility/moving possibility
         if (local_returned_node != nullptr)
         {
             return local_returned_node;
         }
-  //      local_returned_node = this->end_or_again_or_else (&(local_node->left), local_nodes_steps, local_node->depth < restriction ? true : false, false); // swap possibility/moving possibility
+        local_returned_node = this->end_or_again_or_else (&(local_node->left), local_nodes_steps, local_node->depth < restriction ? true : false, false); // swap possibility/moving possibility
         if (local_returned_node != nullptr)
         {
             return local_returned_node;
@@ -205,16 +207,17 @@ Node* Graph::iterativeDFS(int restriction, int* local_nodes_steps)
 }
 
 // ---------- < DFS DEPTH BY STEPS > ----------
-Node* Graph::dfsBySteps(int* local_nodes_steps)
+Node* Graph::dfsBySteps(int* local_nodes_steps, int choose)
 {
-    Node* local_node;
+    Node* local_node = new Node(0);
     Node* local_returned_node = nullptr;
     cout << "Initial State:\n";
     printMatixNode(root);
     unsetDataNodes.insert(getString(root));
+    priority_queue.push(root);
     list_allPath.push_front(root);
     local_node = root;
-    //printDataPath();
+    printDataPath(priority_queue);
 
     cout << "Press enter to next step...";
     fflush(stdin);
@@ -225,40 +228,45 @@ Node* Graph::dfsBySteps(int* local_nodes_steps)
     this->RenderLoad(local_node);
     /*----------------------------------------------RENDERING------------------------------------------------*/
 
-    while (!list_allPath.empty())
+    while (!priority_queue.empty())
     {
-        local_node = *(list_allPath.begin());
-        list_allPath.pop_front();
+        //local_node = *(list_allPath.begin());
+        local_node = priority_queue.top();
+        priority_queue.pop();
+        //list_allPath.pop_front();
         cout << "\n---------- BEGIN OF STEP ----------\n";
         cout << "Revealed top:\n";
         printMatixNode(local_node);
         cout << "Revealed vertices in this step:\n";
-        //uncoverNodes(local_node, local_nodes_steps, true);
+        uncoverNodes(local_node, local_nodes_steps, true, choose);
         local_nodes_steps[1] = local_nodes_steps[1] + 1;
         printDataNode(local_node);
 
-      //  local_returned_node = this->end_or_again_or_else (&(local_node->right), local_nodes_steps, true, true); // swap possibility/moving possibility
+        local_returned_node = this->end_or_again_or_else (&(local_node->right), local_nodes_steps, true, true); // swap possibility/moving possibility
         if (local_returned_node != nullptr)
         {
             return local_returned_node;
         }
-    //    local_returned_node = this->end_or_again_or_else (&(local_node->down), local_nodes_steps, true, true); // swap possibility/moving possibility
+        local_returned_node = this->end_or_again_or_else (&(local_node->down), local_nodes_steps, true, true); // swap possibility/moving possibility
         if (local_returned_node != nullptr)
         {
             return local_returned_node;
         }
-   //     local_returned_node = this->end_or_again_or_else (&(local_node->up), local_nodes_steps, true, true); // swap possibility/moving possibility
+        local_returned_node = this->end_or_again_or_else (&(local_node->up), local_nodes_steps, true, true); // swap possibility/moving possibility
         if (local_returned_node != nullptr)
         {
             return local_returned_node;
         }
-  //      local_returned_node = this->end_or_again_or_else (&(local_node->left), local_nodes_steps, true, true); // swap possibility/moving possibility
+        local_returned_node = this->end_or_again_or_else (&(local_node->left), local_nodes_steps, true, true); // swap possibility/moving possibility
         if (local_returned_node != nullptr)
         {
             return local_returned_node;
         }
 
-        //printDataPath();
+        printDataPath(priority_queue);
+
+        local_node = priority_queue.top();
+        cout << "Prioritet: " << local_node->priority << endl;
 
         cout << "---------- END OF STEP ----------\n\n";
         cout << "Press enter to next step...";
@@ -285,16 +293,17 @@ Node* Graph::dfsBySteps(int* local_nodes_steps)
 }
 
 // ---------- < DFS DEPTH LIMIT BY STEPS > ----------
-Node* Graph::iterativeDFSBySteps(int restriction, int* local_nodes_steps)
+Node* Graph::iterativeDFSBySteps(int restriction, int* local_nodes_steps, int choose)
 {
-    Node* local_node;
+    Node* local_node = new Node(0);
     Node* local_returned_node = nullptr;
     cout << "Initial State:\n";
     printMatixNode(root);
     unsetDataNodes.insert(getString(root));
-    list_allPath.push_front(root);
+    priority_queue.push(root);
+    //list_allPath.push_front(root);
     local_node = root;
-    //printDataPath();
+    printDataPath(priority_queue);
 
     cout << "Press enter to next step...";
     fflush(stdin);
@@ -305,40 +314,45 @@ Node* Graph::iterativeDFSBySteps(int restriction, int* local_nodes_steps)
     this->RenderLoad(local_node);
     /*----------------------------------------------RENDERING------------------------------------------------*/
 
-    while (!list_allPath.empty()) {
-        local_node = *(list_allPath.begin());
-        list_allPath.pop_front();
+    while (!priority_queue.empty()) {
+        //local_node = *(list_allPath.begin());
+        local_node = priority_queue.top();
+        priority_queue.pop();
+        //list_allPath.pop_front();
         cout << "\n---------- BEGIN OF STEP ----------\n";
         cout << "Revealed top: " << endl;
         printMatixNode(local_node);
 
         cout << "Revealed vertices in this step: " << endl;
-        //uncoverNodes(local_node, local_nodes_steps, true);
+        uncoverNodes(local_node, local_nodes_steps, true, choose);
         local_nodes_steps[1] = local_nodes_steps[1] + 1;
         printDataNode(local_node);
 
-  //      local_returned_node = this->end_or_again_or_else(&(local_node->right), local_nodes_steps, local_node->depth < restriction ? true : false, true); // swap possibility/moving possibility
+        local_returned_node = this->end_or_again_or_else(&(local_node->right), local_nodes_steps, local_node->depth < restriction ? true : false, true); // swap possibility/moving possibility
         if (local_returned_node != nullptr)
         {
             return local_returned_node;
         }
-//        local_returned_node = this->end_or_again_or_else(&(local_node->down), local_nodes_steps, local_node->depth < restriction ? true : false, true); // swap possibility/moving possibility
+        local_returned_node = this->end_or_again_or_else(&(local_node->down), local_nodes_steps, local_node->depth < restriction ? true : false, true); // swap possibility/moving possibility
         if (local_returned_node != nullptr)
         {
             return local_returned_node;
         }
-  //      local_returned_node = this->end_or_again_or_else(&(local_node->up), local_nodes_steps, local_node->depth < restriction ? true : false, true); // swap possibility/moving possibility
+        local_returned_node = this->end_or_again_or_else(&(local_node->up), local_nodes_steps, local_node->depth < restriction ? true : false, true); // swap possibility/moving possibility
         if (local_returned_node != nullptr)
         {
             return local_returned_node;
         }
-  //      local_returned_node = this->end_or_again_or_else(&(local_node->left), local_nodes_steps, local_node->depth < restriction ? true : false, true); // swap possibility/moving possibility
+        local_returned_node = this->end_or_again_or_else(&(local_node->left), local_nodes_steps, local_node->depth < restriction ? true : false, true); // swap possibility/moving possibility
         if (local_returned_node != nullptr)
         {
             return local_returned_node;
         }
 
-        //printDataPath();
+        printDataPath(priority_queue);
+        if(!priority_queue.empty())
+            local_node = priority_queue.top();
+        cout << "Prioritet: " << local_node->priority << endl;
 
         cout << "---------- END OF STEP ----------\n\n";
         cout << "Press enter to next step...";
@@ -515,7 +529,7 @@ Node* Graph::fillMatrixValues(Node* local_node)
 }
 
 // ---------- < COMPARING IF IT'S END, OR IF IT'S EXISTING NODE, OR IF IT'S NEW, BUT NOT THE END > ----------
-Node* Graph::end_or_again_or_else (Node** local_node_pointer, int* local_nodes_steps, bool local_limit_check, bool local_steps_output,Queue_p queue_prioritet)
+Node* Graph::end_or_again_or_else (Node** local_node_pointer, int* local_nodes_steps, bool local_limit_check, bool local_steps_output)
 {
     if (*local_node_pointer != nullptr && local_limit_check == true)
     {
@@ -533,7 +547,7 @@ Node* Graph::end_or_again_or_else (Node** local_node_pointer, int* local_nodes_s
                 printMatixNode(*local_node_pointer);
             }
             this->unsetDataNodes.insert(getString(*local_node_pointer));
-            queue_prioritet.push(*local_node_pointer);
+            this->priority_queue.push(*local_node_pointer);
             //this->list_allPath.push_front(*local_node_pointer);
             if (local_steps_output == true)
             {

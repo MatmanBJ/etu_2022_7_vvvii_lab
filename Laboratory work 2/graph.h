@@ -1,15 +1,26 @@
 #include <list>
 #include <unordered_set>
+#include <queue>
+#include <vector>
 #include <SFML\Graphics.hpp>
 #include <SFML\Graphics\Font.hpp>
 #include <SFML\Graphics\Text.hpp>
 #include <SFML\Graphics\RenderWindow.hpp>
 
-#ifndef GRAPH_H
-#define GRAPH_H
+
+
+struct comparator {
+public:
+    bool operator()(const Node* a, const Node* b) // overloading both operators 
+    {
+        return a->priority > b->priority;
+    }
+};
 
 class Graph
 {
+protected:
+    typedef priority_queue<Node*, std::vector<Node*>, comparator > Queue_p;
 public:
     /*----------------------------------------CONSTRUCTOR AND DESTRUCTOR-----------------------------------*/
     Graph();
@@ -17,18 +28,18 @@ public:
     /*----------------------------------------CONSTRUCTOR AND DESTRUCTOR-----------------------------------*/
 
     /*----------------------------------------ALGORITHMS-----------------------------------*/
-    Node* dfs(int* local_nodes_steps, int);
-    Node* iterativeDFS(int, int* local_nodes_steps);
+    Node* dfs(int* local_nodes_steps, int choose);
+    Node* iterativeDFS(int, int* local_nodes_steps, int choose);
     /*----------------------------------------ALGORITHMS-----------------------------------*/
 
     /*----------------------------------------ALGORITHMS STEPS-----------------------------------*/
-    Node* dfsBySteps(int* local_nodes_steps);
-    Node* iterativeDFSBySteps(int, int* local_nodes_steps);
+    Node* dfsBySteps(int* local_nodes_steps, int choose);
+    Node* iterativeDFSBySteps(int, int* local_nodes_steps, int choose);
     /*----------------------------------------ALGORITHMS STEPS-----------------------------------*/
 
     /*----------------------------------------FILLING VALUES AND WORK WITH NODES-----------------------------------*/
     Node* fillMatrixValues(Node* local_node);
-    Node* end_or_again_or_else (Node** local_node_pointer, int* local_nodes_steps, bool local_limit_check, bool local_steps_output, Queue_p queue_prioritet);
+    Node* end_or_again_or_else (Node** local_node_pointer, int* local_nodes_steps, bool local_limit_check, bool local_steps_output);
     bool compareNodes(Node* local_node);
     bool check_repeatNodes(Node* local_node);
     string getString(Node* local_node);
@@ -61,8 +72,7 @@ private:
     static void DestroyNode(Node* node);
     typedef unordered_set<string> Dataset;
     typedef list<Node*> List;
-    typedef priority_queue<Node*, vector<Node*>, decltype(comparator)> Queue_p;
-   
+
     Dataset unsetDataNodes;
     List list_allPath;
     Queue_p priority_queue;
@@ -79,4 +89,3 @@ private:
 
     sf::Font font;
 };
-#endif
