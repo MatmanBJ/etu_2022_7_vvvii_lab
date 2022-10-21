@@ -511,8 +511,8 @@ void Graph::uncoverNodes(Node* local_node, int* local_nodes_steps, bool local_st
         local_nodes_steps[0] = local_nodes_steps[0] + 1;
         (*local_node).right->parent = local_node;
     }
-    /*?????????????????????????/*/
-    chooseHeuristics(local_node, choose); 
+    
+    choiceOfHeuristic(local_node, choose); 
     if(local_steps_output)cout << "\n";
 }
 
@@ -577,30 +577,30 @@ Node* Graph::end_or_again_or_else (Node** local_node_pointer, int* local_nodes_s
     return nullptr;
 }
 
-/*???????????????????????????????????*/
-void Graph::chooseHeuristics(Node* cur, int choose) {
+//---------- < SELECT HEURISTIC LOGIC > ----------
+void Graph::choiceOfHeuristic(Node* local_node, int choose) {
     if (choose == 1) {
-        countChanged(cur);
+        f_h1(local_node);
     }
     if (choose == 2) {
-        countChangedLength(cur);
+        f_h2(local_node);
     }
     if (choose == 3) {
-        countChangedA(cur);
+        f_Ah1(local_node);
     }
     if (choose == 4) {
-        countChangedLengthA(cur);
+        f_Ah2(local_node);
     }
 }
 
-/*???????????????????????????????????*/
-int Graph::compareArr(Node* cur) {
+//---------- <COMPARE PRIORITY OF NODE FOR H1 > ----------
+int Graph::compareH1(Node* local_node) {
     int count = 0;
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
             for (int y = 0; y < 3; y++) {
                 for (int x = 0; x < 3; x++) {
-                    if (cur->elements[i][j] == end->elements[y][x] && cur->elements[i][j] != ' ') {
+                    if (local_node->elements[i][j] == end->elements[y][x] && local_node->elements[i][j] != ' ') {
                         if (i != y || j != x) {
                             count++;
                         }
@@ -611,14 +611,14 @@ int Graph::compareArr(Node* cur) {
     }
     return count;
 }
-/*???????????????????????????????????*/
-int Graph::compareArrLength(Node* cur) {
+//---------- <COMPARE PRIORITY OF NODE FOR H1 > ----------
+int Graph::compareH2(Node* local_node) {
     int count = 0;
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
             for (int y = 0; y < 3; y++) {
                 for (int x = 0; x < 3; x++) {
-                    if (cur->elements[i][j] == end->elements[y][x] && cur->elements[i][j] != ' ') {
+                    if (local_node->elements[i][j] == end->elements[y][x] && local_node->elements[i][j] != ' ') {
                         count = count + abs(i - y) + abs(j - x);
                     }
                 }
@@ -627,38 +627,38 @@ int Graph::compareArrLength(Node* cur) {
     }
     return count;
 }
-/*???????????????????????????????????*/
-void Graph::countChanged(Node* cur) {
-    if (cur->left != nullptr) {
-        cur->left->priority = compareArr(cur->left);
+//---------- < h1 LOGIC > ----------
+void Graph::f_h1(Node* local_node) {
+    if (local_node->left != nullptr) {
+        local_node->left->priority = compareH1(local_node->left);
     }
-    if (cur->down != nullptr) {
-        cur->down->priority = compareArr(cur->down);
+    if (local_node->down != nullptr) {
+        local_node->down->priority = compareH1(local_node->down);
     }
-    if (cur->up != nullptr) {
-        cur->up->priority = compareArr(cur->up);
+    if (local_node->up != nullptr) {
+        local_node->up->priority = compareH1(local_node->up);
     }
-    if (cur->right != nullptr) {
-        cur->right->priority = compareArr(cur->right);
-    }
-}
-/*???????????????????????????????????*/
-void Graph::countChangedLength(Node* cur) {
-    if (cur->left != nullptr) {
-        cur->left->priority = compareArrLength(cur->left);
-    }
-    if (cur->down != nullptr) {
-        cur->down->priority = compareArrLength(cur->down);
-    }
-    if (cur->up != nullptr) {
-        cur->up->priority = compareArrLength(cur->up);
-    }
-    if (cur->right != nullptr) {
-        cur->right->priority  = compareArrLength(cur->right);
+    if (local_node->right != nullptr) {
+        local_node->right->priority = compareH1(local_node->right);
     }
 }
-/*???????????????????????????????????*/
-int Graph::compareArrA(Node* cur) {
+//---------- < h2 LOGIC > ----------
+void Graph::f_h2(Node* local_node) {
+    if (local_node->left != nullptr) {
+        local_node->left->priority = compareH2(local_node->left);
+    }
+    if (local_node->down != nullptr) {
+        local_node->down->priority = compareH2(local_node->down);
+    }
+    if (local_node->up != nullptr) {
+        local_node->up->priority = compareH2(local_node->up);
+    }
+    if (local_node->right != nullptr) {
+        local_node->right->priority  = compareH2(local_node->right);
+    }
+}
+//---------- <COMPARE PRIORITY OF NODE FOR A* H1 > ----------
+int Graph::compareAH1(Node* cur) {
     int count = 0;
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
@@ -675,8 +675,8 @@ int Graph::compareArrA(Node* cur) {
     }
     return (count + cur->depth);
 }
-/*???????????????????????????????????*/
-int Graph::compareArrLengthA(Node* cur) {
+//---------- <COMPARE PRIORITY OF NODE FOR A* H2 > ----------
+int Graph::compareAH2(Node* cur) {
     int count = 0;
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
@@ -691,34 +691,34 @@ int Graph::compareArrLengthA(Node* cur) {
     }
     return (count + cur->depth);
 }
-/*???????????????????????????????????*/
-void Graph::countChangedA(Node* cur) {
-    if (cur->left != nullptr) {
-        cur->left->priority = compareArrA(cur->left);
+//---------- <A* h1 LOGIC > ----------
+void Graph::f_Ah1(Node* local_node) {
+    if (local_node->left != nullptr) {
+        local_node->left->priority = compareAH1(local_node->left);
     }
-    if (cur->down != nullptr) {
-        cur->down->priority = compareArrA(cur->down);
+    if (local_node->down != nullptr) {
+        local_node->down->priority = compareAH1(local_node->down);
     }
-    if (cur->up != nullptr) {
-        cur->up->priority = compareArrA(cur->up);
+    if (local_node->up != nullptr) {
+        local_node->up->priority = compareAH1(local_node->up);
     }
-    if (cur->right != nullptr) {
-        cur->right->priority = compareArrA(cur->right);
+    if (local_node->right != nullptr) {
+        local_node->right->priority = compareAH1(local_node->right);
     }
 }
-/*???????????????????????????????????*/
-void Graph::countChangedLengthA(Node* cur) {
-    if (cur->left != nullptr) {
-        cur->left->priority = compareArrLengthA(cur->left);
+//---------- <A* h2 LOGIC > ----------
+void Graph::f_Ah2(Node* local_node) {
+    if (local_node->left != nullptr) {
+        local_node->left->priority = compareAH2(local_node->left);
     }
-    if (cur->down != nullptr) {
-        cur->down->priority = compareArrLengthA(cur->down);
+    if (local_node->down != nullptr) {
+        local_node->down->priority = compareAH2(local_node->down);
     }
-    if (cur->up != nullptr) {
-        cur->up->priority = compareArrLengthA(cur->up);
+    if (local_node->up != nullptr) {
+        local_node->up->priority = compareAH2(local_node->up);
     }
-    if (cur->right != nullptr) {
-        cur->right->priority = compareArrLengthA(cur->right);
+    if (local_node->right != nullptr) {
+        local_node->right->priority = compareAH2(local_node->right);
     }
 }
 

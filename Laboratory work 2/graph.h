@@ -48,15 +48,15 @@ public:
     void printMatixNode(Node* local_node);
     void printDataPath(Queue_p queue_prioritet);
 
-    void chooseHeuristics(Node*, int);
-    int compareArr(Node*);
-    int compareArrLength(Node*);
-    void countChanged(Node*);
-    void countChangedLength(Node*);
-    int compareArrA(Node*);
-    int compareArrLengthA(Node*);
-    void countChangedA(Node*);
-    void countChangedLengthA(Node*);
+    void choiceOfHeuristic(Node* local_node, int algorithm_settingsOption);
+    int compareH1(Node* local_node);
+    int compareH2(Node* local_node);
+    void f_h1(Node* local_node);
+    void f_h2(Node* local_node);
+    int compareAH1(Node* local_node);
+    int compareAH2(Node* local_node);
+    void f_Ah1(Node* local_node);
+    void f_Ah2(Node* local_node);
     /*----------------------------------------FILLING VALUES AND WORK WITH NODES-----------------------------------*/
 
     /*----------------------------------------RENDERING-----------------------------------*/
